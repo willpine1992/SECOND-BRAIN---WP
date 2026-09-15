@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Second Brain</title>
+<link rel="stylesheet" href="style.css" />
+<script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+</head>
+<body>
+<div id="app">
+
+  <header id="topbar">
+    <button id="toggleSidebar" class="icon-btn" title="Alternar painel">☰</button>
+    <div class="brand">🧠 Second Brain</div>
+    <div class="searchbox">
+      <input id="searchInput" type="text" placeholder="Buscar notas, tags, conteúdo..." />
+    </div>
+    <div class="topbar-actions">
+      <button id="newNoteBtn" class="btn">+ Nota</button>
+      <button id="dailyNoteBtn" class="btn">Diário de hoje</button>
+      <button id="graphBtn" class="btn">Grafo</button>
+      <button id="themeBtn" class="icon-btn" title="Alternar tema">◐</button>
+    </div>
+  </header>
+
+  <div id="body">
+    <aside id="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title">Notas</div>
+        <div id="tree" class="tree"></div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-title">Tags</div>
+        <div id="tagList" class="tag-list"></div>
+      </div>
+    </aside>
+
+    <main id="main">
+      <div id="emptyState" class="empty-state">
+        <p>Selecione uma nota, crie uma nova, ou veja o grafo.</p>
+      </div>
+
+      <div id="editorView" class="hidden">
+        <div class="editor-toolbar">
+          <span id="notePath" class="note-path"></span>
+          <div class="spacer"></div>
+          <button id="modeEditBtn" class="tab-btn active">Editar</button>
+          <button id="modePreviewBtn" class="tab-btn">Ler</button>
+          <button id="saveBtn" class="btn primary">Salvar</button>
+          <button id="deleteBtn" class="btn danger">Excluir</button>
+        </div>
+        <div class="editor-body">
+          <textarea id="editorTextarea" spellcheck="false"></textarea>
+          <div id="previewPane" class="preview hidden"></div>
+        </div>
+      </div>
+
+      <div id="graphView" class="hidden">
+        <svg id="graphSvg"></svg>
+      </div>
+    </main>
+
+    <aside id="rightPanel">
+      <div class="sidebar-section">
+        <div class="sidebar-title">Frontmatter</div>
+        <div id="frontmatterBox" class="meta-box">—</div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-title">Links de saída</div>
+        <div id="outLinks" class="meta-box">—</div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-title">Backlinks</div>
+        <div id="backLinks" class="meta-box">—</div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- New note modal -->
+<div id="newNoteModal" class="modal hidden">
+  <div class="modal-card">
+    <h3>Nova nota</h3>
+    <label>Pasta</label>
+    <select id="newNoteFolder"></select>
+    <label>Título</label>
+    <input id="newNoteTitle" type="text" placeholder="Título da nota" />
+    <label>Template</label>
+    <select id="newNoteTemplate"></select>
+    <div class="modal-actions">
+      <button id="newNoteCancel" class="btn">Cancelar</button>
+      <button id="newNoteCreate" class="btn primary">Criar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm / alert modal -->
+<div id="confirmModal" class="modal hidden">
+  <div class="modal-card">
+    <p id="confirmMessage"></p>
+    <div class="modal-actions">
+      <button id="confirmCancel" class="btn">Cancelar</button>
+      <button id="confirmOk" class="btn primary">OK</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
