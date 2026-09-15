@@ -247,7 +247,7 @@ body {
 #graphView { flex: 1; min-height: 0; }
 #graphSvg { width: 100%; height: 100%; display: block; background: var(--bg); }
 .graph-node circle { stroke: var(--bg); stroke-width: 1.5px; cursor: pointer; }
-.graph-node text { font-size: 10px; fill: var(--text-dim); pointer-events: none; }
+.graph-node text { font-size: 7px; fill: var(--text-dim); pointer-events: none; text-anchor: middle; }
 .graph-link { stroke: var(--border); stroke-width: 1px; }
 
 .modal {

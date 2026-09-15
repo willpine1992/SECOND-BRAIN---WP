@@ -521,6 +521,47 @@ function folderColor(folder) {
   return `hsl(${hue}, 45%, 55%)`;
 }
 
+// Splits a title into up to 3 short lines (word-wrapped), ellipsizing
+// whatever doesn't fit, so labels stay readable at small node sizes.
+function wrapLabel(title, maxCharsPerLine) {
+  const words = title.split(/\s+/);
+  const lines = [];
+  let current = "";
+  for (const word of words) {
+    const candidate = current ? current + " " + word : word;
+    if (candidate.length > maxCharsPerLine && current) {
+      lines.push(current);
+      current = word;
+      if (lines.length === 2) break;
+    } else {
+      current = candidate;
+    }
+  }
+  if (lines.length < 3 && current) lines.push(current);
+  if (lines.length === 3) {
+    const consumed = lines.slice(0, 2).join(" ").length + 1;
+    let last = title.slice(consumed).trim() || lines[2];
+    if (last.length > maxCharsPerLine) last = last.slice(0, maxCharsPerLine - 1).trimEnd() + "…";
+    lines[2] = last;
+  }
+  return lines;
+}
+
+// Gently nudges every node's velocity each tick so the graph keeps drifting
+// like loose particles instead of settling into a static layout.
+function forceJiggle(strength) {
+  let nodes = [];
+  function force() {
+    for (const n of nodes) {
+      if (n.fx != null) continue; // being dragged, leave it alone
+      n.vx += (Math.random() - 0.5) * strength;
+      n.vy += (Math.random() - 0.5) * strength;
+    }
+  }
+  force.initialize = (_nodes) => { nodes = _nodes; };
+  return force;
+}
+
 function renderGraph() {
   const svg = d3.select("#graphSvg");
   svg.selectAll("*").remove();
@@ -531,7 +572,7 @@ function renderGraph() {
 
   const nodesMap = new Map();
   for (const [path, note] of Object.entries(state.index)) {
-    nodesMap.set(path, { id: path, title: note.title, folder: note.folder });
+    nodesMap.set(path, { id: path, title: note.title, folder: note.folder, degree: 0 });
   }
   const links = [];
   for (const [path, note] of Object.entries(state.index)) {
@@ -541,19 +582,33 @@ function renderGraph() {
       }
     }
   }
+  for (const link of links) {
+    nodesMap.get(link.source).degree += 1;
+    nodesMap.get(link.target).degree += 1;
+  }
   const nodes = Array.from(nodesMap.values());
+
+  const maxDegree = Math.max(1, ...nodes.map((n) => n.degree));
+  const radiusScale = d3.scaleSqrt().domain([0, maxDegree]).range([4, 16]).clamp(true);
+  const radiusOf = (d) => radiusScale(d.degree);
 
   const g = svg.append("g");
   svg.call(
     d3.zoom().scaleExtent([0.2, 4]).on("zoom", (event) => g.attr("transform", event.transform))
   );
 
+  const AMBIENT_ALPHA = 0.08;
+
   const simulation = d3
     .forceSimulation(nodes)
-    .force("link", d3.forceLink(links).id((d) => d.id).distance(70).strength(0.4))
-    .force("charge", d3.forceManyBody().strength(-120))
+    .alphaDecay(0.02)
+    .alphaTarget(AMBIENT_ALPHA)
+    .velocityDecay(0.35)
+    .force("link", d3.forceLink(links).id((d) => d.id).distance(70).strength(0.35))
+    .force("charge", d3.forceManyBody().strength((d) => -80 - radiusOf(d) * 6))
     .force("center", d3.forceCenter(width / 2, height / 2))
-    .force("collide", d3.forceCollide(16));
+    .force("collide", d3.forceCollide((d) => radiusOf(d) + 14))
+    .force("jiggle", forceJiggle(0.5));
 
   const link = g
     .append("g")
@@ -581,15 +636,27 @@ function renderGraph() {
           d.fy = event.y;
         })
         .on("end", (event, d) => {
-          if (!event.active) simulation.alphaTarget(0);
+          if (!event.active) simulation.alphaTarget(AMBIENT_ALPHA);
           d.fx = null;
           d.fy = null;
         })
     )
     .on("click", (event, d) => openNote(d.id));
 
-  node.append("circle").attr("r", 7).attr("fill", (d) => folderColor(d.folder));
-  node.append("text").attr("dx", 10).attr("dy", 4).text((d) => d.title);
+  node.append("circle").attr("r", radiusOf).attr("fill", (d) => folderColor(d.folder));
+
+  const label = node.append("text").attr("dy", (d) => radiusOf(d) + 8);
+  label.each(function (d) {
+    const lines = wrapLabel(d.title, 16);
+    const text = d3.select(this);
+    lines.forEach((line, i) => {
+      text
+        .append("tspan")
+        .attr("x", 0)
+        .attr("dy", i === 0 ? 0 : "1.05em")
+        .text(line);
+    });
+  });
 
   simulation.on("tick", () => {
     link
@@ -599,6 +666,17 @@ function renderGraph() {
       .attr("y2", (d) => d.target.y);
     node.attr("transform", (d) => `translate(${d.x},${d.y})`);
   });
+
+  // Stop the simulation (and its perpetual ambient jiggle) once the user
+  // navigates away from the graph view, so it doesn't run forever in the background.
+  const graphViewEl = document.getElementById("graphView");
+  const stopObserver = new MutationObserver(() => {
+    if (graphViewEl.classList.contains("hidden")) {
+      simulation.stop();
+      stopObserver.disconnect();
+    }
+  });
+  stopObserver.observe(graphViewEl, { attributes: true, attributeFilter: ["class"] });
 }
 
 el("graphBtn").addEventListener("click", () => {
