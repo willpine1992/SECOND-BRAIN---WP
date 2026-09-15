@@ -5,6 +5,20 @@ estrutura e funcionalidades de um vault do Obsidian (wikilinks, backlinks,
 tags hierárquicas, templates, notas diárias, grafo de conexões) — mas como
 uma aplicação web local independente, sem depender do app Obsidian.
 
+## 🔗 Acesso ao painel
+
+**http://127.0.0.1:8765**
+
+O painel é uma aplicação **local** (roda só na sua máquina, sem servidor na
+internet — por isso não existe um link público/hospedado). Pra abrir:
+
+```bash
+./start.sh
+```
+
+e depois acesse o link acima no navegador. Enquanto o servidor não estiver
+rodando, esse link não responde.
+
 ## Estrutura
 
 ```
@@ -29,10 +43,8 @@ SECOND BRAIN - WP/
 
 ```bash
 ./start.sh
-# ou: python3 app/server.py --port 8765 --vault ./vault
+# ou, com outra porta/vault: python3 app/server.py --port 8765 --vault ./vault
 ```
-
-Depois abra `http://127.0.0.1:8765` no navegador.
 
 ## Funcionalidades
 
