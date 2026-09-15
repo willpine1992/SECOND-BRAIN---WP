@@ -7,17 +7,27 @@ uma aplicação web local independente, sem depender do app Obsidian.
 
 ## 🔗 Acesso ao painel
 
-**http://127.0.0.1:8765**
+**Online (somente leitura):** https://willpine1992.github.io/SECOND-BRAIN---WP/
+— publicado via GitHub Pages a partir de `docs/`, dá pra abrir de qualquer
+lugar/dispositivo pra navegar pelas notas, tags, backlinks e o grafo. Criar,
+editar ou excluir nota **não** funciona nessa versão (é uma cópia estática do
+vault, sem servidor por trás).
 
-O painel é uma aplicação **local** (roda só na sua máquina, sem servidor na
-internet — por isso não existe um link público/hospedado). Pra abrir:
+**Local (leitura e escrita):** `http://127.0.0.1:8765`, rodando:
 
 ```bash
 ./start.sh
 ```
 
-e depois acesse o link acima no navegador. Enquanto o servidor não estiver
-rodando, esse link não responde.
+Essa é a versão completa (cria/edita/exclui notas de verdade) — só funciona
+na sua máquina, com o servidor rodando.
+
+Depois de editar o vault localmente, pra atualizar a cópia online:
+
+```bash
+python3 scripts/build_static_site.py   # regenera docs/data.json
+git add docs/data.json && git commit -m "Atualiza cópia online" && git push
+```
 
 ## Estrutura
 
@@ -33,6 +43,10 @@ SECOND BRAIN - WP/
 ├── app/
 │   ├── server.py    # backend (Python stdlib, zero dependências)
 │   └── static/       # frontend (HTML/CSS/JS puro + marked.js + d3.js via CDN)
+├── docs/            # cópia somente leitura, publicada via GitHub Pages
+│   ├── data.json      # vault inteiro embutido (gerado por scripts/build_static_site.py)
+│   └── index.html, style.css, app.js
+├── scripts/build_static_site.py   # regenera docs/data.json a partir do vault/
 ├── .claude/skills/pesquisador/   # skill do Claude Code (escopo deste projeto)
 │   ├── SKILL.md                    # processa alertas do Scholar, PDFs, diário, projetos
 │   └── scripts/parse_scholar_alert.py
