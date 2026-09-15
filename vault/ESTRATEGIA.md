@@ -46,7 +46,7 @@ Não importa se é uma nota de artigo, uma ideia, ou uma nota de projeto — sem
 ## Revisão rápida (uma vez por semana, 15 min)
 
 1. Esvazia o `Inbox/`.
-2. Abre o **Graph view** (ícone de rede na lateral) e procura notas soltas, sem nenhuma linha saindo — força pelo menos 1 link em cada.
+2. Abre o **Grafo** (botão no topo) e procura notas soltas, sem nenhuma linha saindo — força pelo menos 1 link em cada.
 3. Relê 1 nota antiga de `Minhas Notas/` ao acaso — às vezes gera uma conexão nova.
 
 ## Relação com o Claude Code

@@ -1,12 +1,15 @@
 ---
 tags: [meta, tutorial]
-data: 2026-09-14
+data: 2026-09-15
 ---
-Eu uso o formato `[[Nota]]` para links internos. Sempre que criar um conceito novo que se relacione com uma nota existente, crie o link no formato wiki do Obsidian. Sempre use Frontmatter (YAML) no topo com `tags:` e `data:`
+Eu uso o formato `[[Nota]]` para links internos. Sempre que criar um conceito novo que se relacione com uma nota existente, crie o link nesse formato wiki. Sempre use Frontmatter (YAML) no topo com `tags:` e `data:`
 
 # Tutorial — Como Usar Este Vault
 
 Guia prático. Pra entender o *porquê* das regras, ver [[ESTRATEGIA]] — este arquivo aqui é só "o que eu faço, agora".
+
+> Este vault roda no **Second Brain**, o app próprio (não o Obsidian) —
+> suba com `./start.sh` na raiz do projeto e abra `http://127.0.0.1:8765`.
 
 ---
 
@@ -20,19 +23,17 @@ Guia prático. Pra entender o *porquê* das regras, ver [[ESTRATEGIA]] — este 
 **Passo 1 — durante a leitura.** Não organiza nada. Se um trecho chamar atenção, joga rápido no `Inbox/` (nova nota, `Cmd+N`, escreve 1 linha e segue lendo).
 
 **Passo 2 — depois de terminar o artigo.**
-1. `Cmd+P` → `Insert template` → `Modelo - Nota de Literatura`
-2. Cria/move a nota pra `Artigos/` do tema certo (ex.: `DATA SCIENCE/QUIMIOINFORMATICA/Artigos/`)
-3. Renomeia pro título do artigo
-4. Preenche: autores, ano, link/DOI
-5. **TL;DR**: resume em 1-3 frases, *com suas palavras* — nunca copia o abstract
-6. Trechos-chave: aqui sim pode colar citação literal, com página
+1. Botão **+ Nota** (topo) → escolhe a pasta `DATA SCIENCE/QUIMIOINFORMATICA/Artigos` (ou o tema certo) → template `Modelo - Nota de Literatura`
+2. Digita o título do artigo em vez de "nome genérico" — o app já cria o arquivo com esse nome na pasta escolhida
+3. Preenche: autores, ano, link/DOI
+4. **TL;DR**: resume em 1-3 frases, *com suas palavras* — nunca copia o abstract
+5. Trechos-chave: aqui sim pode colar citação literal, com página
 
 **Passo 3 — a parte que gera insight de verdade.** Pra cada trecho que te fez pensar em algo:
-1. `Cmd+P` → `Insert template` → `Modelo - Nota Permanente`
-2. Cria em `Minhas Notas/` do mesmo tema
-3. Escreve a ideia **com suas palavras**
-4. Linka de volta pro artigo (seção "Fontes")
-5. Digita `[[` e procura se já tem outra nota parecida em `Minhas Notas/` — se achar, linka
+1. Botão **+ Nota** → pasta `Minhas Notas` do mesmo tema → template `Modelo - Nota Permanente`
+2. Escreve a ideia **com suas palavras**
+3. Linka de volta pro artigo (seção "Fontes") digitando `[[` + nome do artigo
+4. No modo **Ler**, clica no link pra conferir se resolveu certo (fica azul se achou a nota, vermelho/pontilhado se não achou — nesse caso o app oferece criar a nota que falta)
 
 **Passo 4.** Volta na nota do artigo e linka as ideias novas que você criou a partir dele.
 
@@ -40,22 +41,22 @@ Um artigo bem processado gera **2 a 5 notas em Minhas Notas**, não só 1 nota d
 
 ## 3. O dia a dia (`Diario/`)
 
-`Cmd+P` → `Open today's daily note` (já abre no lugar certo, com o modelo certo). Preenche rápido: o que fez, decisão tomada, onde travou, próximo passo. Linka o projeto que você tocou.
+Botão **Diário de hoje** (topo) — já abre/cria a nota do dia certa, com o modelo certo. Preenche rápido: o que fez, decisão tomada, onde travou, próximo passo. Linka o projeto que você tocou.
 
 ## 4. Como isso "acumula" valor
 
 - Primeiras semanas: poucas notas, os links parecem forçados. Normal.
-- Com mais notas: o autocomplete do `[[` começa a sugerir coisas que você já escreveu e tinha esquecido.
-- Depois de um tempo: o **Graph view** mostra aglomerados — assuntos que amadureceram sem você perceber.
-- O painel de **Backlinks** (embaixo de cada nota) mostra tudo que aponta pra ela — vira automaticamente seu "tudo que já pensei sobre isso".
+- Com mais notas: fica mais fácil lembrar o que já existe olhando o painel de **Tags** (lateral esquerda, com contagem por tag).
+- Depois de um tempo: o botão **Grafo** (topo) mostra aglomerados — assuntos que amadureceram sem você perceber.
+- O painel de **Backlinks** (lateral direita, abaixo de cada nota) mostra tudo que aponta pra ela — vira automaticamente seu "tudo que já pensei sobre isso".
 
 ## 5. Guardando os PDFs
 
-PDF sempre cai numa subpasta `PDFs/` dentro do `Artigos/` de onde você estiver (já configurado). Nome padrão: `Sobrenome Ano - Titulo Curto`, igual pra nota e pro PDF.
+PDF sempre cai numa subpasta `PDFs/` dentro do `Artigos/` do tema (fora do que o app mostra na árvore/índice, mas existe normalmente no disco). Nome padrão: `Sobrenome Ano - Titulo Curto`, igual pra nota e pro PDF.
 
-**Sozinho**: arrasta o PDF pra dentro da nota (seção `## PDF` do modelo) — o Obsidian salva e linka sozinho.
+**Sozinho**: copia o PDF manualmente pra `<Tema>/Artigos/PDFs/` (o app ainda não tem upload de arquivo pela interface) e referencia o caminho na seção `## PDF` da nota.
 
-**Comigo**: me manda o PDF (ou uma pasta com vários) e eu leio, extraio autores/resumo/trechos-chave, renomeio no padrão certo, e deixo a nota de artigo rascunhada — você revisa e escreve suas ideias.
+**Comigo**: me manda o PDF (ou uma pasta com vários) e eu leio, extraio autores/resumo/trechos-chave, renomeio no padrão certo, deixo o PDF na pasta certa e a nota de artigo rascunhada — você revisa e escreve suas ideias.
 
 ## 6. Perguntas que vão aparecer
 
@@ -65,18 +66,20 @@ PDF sempre cai numa subpasta `PDFs/` dentro do `Artigos/` de onde você estiver 
 
 **"Não sei onde encaixar."** — Cria mesmo assim, linka no que existir de mais próximo, ajusta na revisão semanal.
 
-**"Esqueci de linkar algo."** — Sem problema, dá pra achar e consertar depois pelo painel de Backlinks ou `Cmd+Shift+F`.
+**"Esqueci de linkar algo."** — Sem problema, dá pra achar e consertar depois pela caixa de busca (topo) ou pelo painel de Backlinks.
 
-## 7. Atalhos
+## 7. Controles do app
 
-| Ação | Atalho |
+| Ação | Onde |
 |---|---|
-| Inserir template | `Cmd+P` → `Insert template` |
-| Nota de hoje | `Cmd+P` → `Open today's daily note` |
-| Linkar outra nota | Digitar `[[` + nome |
-| Buscar no vault | `Cmd+Shift+F` |
-| Abrir nota rápido | `Cmd+O` |
-| Ver grafo | Ícone de rede na lateral |
+| Nova nota (com template) | Botão **+ Nota** (topo) |
+| Nota de hoje | Botão **Diário de hoje** (topo) |
+| Linkar outra nota | Digitar `[[` + nome, no editor |
+| Buscar no vault | Caixa de busca (topo) — título, tag ou conteúdo |
+| Filtrar por tag | Painel **Tags** (lateral esquerda) |
+| Ver grafo | Botão **Grafo** (topo) |
+| Salvar | Botão **Salvar** ou `Cmd+S` |
+| Tema claro/escuro | Ícone ◐ (topo direito) |
 
 ---
 

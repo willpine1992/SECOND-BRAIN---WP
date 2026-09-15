@@ -19,6 +19,9 @@ SECOND BRAIN - WP/
 ├── app/
 │   ├── server.py    # backend (Python stdlib, zero dependências)
 │   └── static/       # frontend (HTML/CSS/JS puro + marked.js + d3.js via CDN)
+├── .claude/skills/pesquisador/   # skill do Claude Code (escopo deste projeto)
+│   ├── SKILL.md                    # processa alertas do Scholar, PDFs, diário, projetos
+│   └── scripts/parse_scholar_alert.py
 └── start.sh          # atalho para subir o servidor local
 ```
 
@@ -61,3 +64,18 @@ e tags, e monta o índice de backlinks em memória a cada requisição a
 O `vault/` foi semeado com uma cópia do vault Obsidian existente do usuário
 (`OBSIDIAN/`), que continua existindo e sendo usado normalmente em paralelo —
 este é um sistema separado.
+
+## Automação (skill do Claude Code)
+
+Este projeto tem uma skill `pesquisador` própria (`.claude/skills/pesquisador/`,
+escopo local — não é a global usada no vault `OBSIDIAN/`) que automatiza,
+dentro deste `vault/`:
+
+- transformar alertas do Google Scholar (Gmail) em notas de fila de leitura;
+- processar um PDF/artigo em nota de literatura + notas de ideia conectadas;
+- registrar sessões de trabalho em `Diario/`;
+- manter notas de projeto em `Minhas Notas/` atualizadas.
+
+Rodando o Claude Code dentro desta pasta, basta pedir em linguagem natural
+("processa os alertas do Scholar", "processa esse PDF", "registra isso no
+diário") — ver `SKILL.md` para os detalhes de cada procedimento.
