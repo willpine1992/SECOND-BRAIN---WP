@@ -1,5 +1,36 @@
 "use strict";
 
+const el = (id) => document.getElementById(id);
+
+// ---------------------------------------------------------------------
+// Graph settings (persisted per-browser; not vault content)
+// ---------------------------------------------------------------------
+const GRAPH_SETTINGS_KEY = "sb-graph-settings";
+const GRAPH_SETTINGS_DEFAULTS = { fontSize: 5, nodeScale: 1, linkIntensity: 0.45, theme: "", tags: [] };
+
+function loadGraphSettings() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(GRAPH_SETTINGS_KEY) || "{}");
+    return {
+      fontSize: typeof saved.fontSize === "number" ? saved.fontSize : GRAPH_SETTINGS_DEFAULTS.fontSize,
+      nodeScale: typeof saved.nodeScale === "number" ? saved.nodeScale : GRAPH_SETTINGS_DEFAULTS.nodeScale,
+      linkIntensity: typeof saved.linkIntensity === "number" ? saved.linkIntensity : GRAPH_SETTINGS_DEFAULTS.linkIntensity,
+      theme: typeof saved.theme === "string" ? saved.theme : GRAPH_SETTINGS_DEFAULTS.theme,
+      tags: Array.isArray(saved.tags) ? saved.tags : [],
+    };
+  } catch {
+    return { ...GRAPH_SETTINGS_DEFAULTS, tags: [] };
+  }
+}
+
+function saveGraphSettings() {
+  try {
+    localStorage.setItem(GRAPH_SETTINGS_KEY, JSON.stringify(state.graphSettings));
+  } catch {
+    // private browsing / storage disabled — settings just won't persist
+  }
+}
+
 const state = {
   tree: [],
   index: {}, // path -> note meta (from /api/index)
@@ -7,9 +38,8 @@ const state = {
   dirty: false,
   mode: "edit", // "edit" | "preview"
   activeTag: null,
+  graphSettings: loadGraphSettings(),
 };
-
-const el = (id) => document.getElementById(id);
 
 // ---------------------------------------------------------------------
 // Custom confirm/alert (no native window.confirm/alert — those block the
@@ -282,6 +312,8 @@ async function openNote(path) {
 
   el("emptyState").classList.add("hidden");
   el("graphView").classList.add("hidden");
+  el("graphSettingsBtn").classList.add("hidden");
+  el("graphSettingsPanel").classList.add("hidden");
   el("editorView").classList.remove("hidden");
   el("notePath").textContent = path;
   el("editorTextarea").value = data.content;
@@ -314,6 +346,7 @@ function renderSideMeta(path) {
     fmBox.textContent = "—";
     outBox.textContent = "—";
     backBox.textContent = "—";
+    el("articleLinkBtn").classList.add("hidden");
     return;
   }
 
@@ -325,8 +358,32 @@ function renderSideMeta(path) {
     const row = document.createElement("div");
     row.className = "fm-row";
     const val = Array.isArray(fm[k]) ? fm[k].join(", ") : fm[k];
-    row.innerHTML = `<span class="fm-key">${k}:</span>${escapeHtml(String(val))}`;
+    const keyEl = `<span class="fm-key">${k}:</span>`;
+    if ((k === "link" || k === "doi") && val) {
+      const href = k === "doi" ? `https://doi.org/${encodeURI(String(val))}` : String(val);
+      row.innerHTML = keyEl;
+      const a = document.createElement("a");
+      a.href = href;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.textContent = String(val);
+      a.style.display = "inline";
+      row.appendChild(a);
+    } else {
+      row.innerHTML = keyEl + escapeHtml(String(val));
+    }
     fmBox.appendChild(row);
+  }
+
+  // Shortcut button in the editor toolbar for one-click access to the source.
+  const articleBtn = el("articleLinkBtn");
+  const articleHref = fm.link || (fm.doi ? `https://doi.org/${encodeURI(String(fm.doi))}` : "");
+  if (articleHref) {
+    articleBtn.href = articleHref;
+    articleBtn.classList.remove("hidden");
+  } else {
+    articleBtn.classList.add("hidden");
+    articleBtn.removeAttribute("href");
   }
 
   outBox.innerHTML = "";
@@ -513,6 +570,89 @@ el("dailyNoteBtn").addEventListener("click", async () => {
 // ---------------------------------------------------------------------
 // Graph view
 // ---------------------------------------------------------------------
+// A "tema" folder is one directly containing Artigos/ and/or Minhas Notas/
+// (the vault's convention) — these are what the user picks from in the
+// theme filter, e.g. "QUIMIOINFORMATICA", not arbitrary intermediate folders.
+function collectThemeFolders(nodes) {
+  const result = [];
+  function walk(list) {
+    for (const n of list) {
+      if (n.type !== "dir") continue;
+      const dirChildNames = n.children.filter((c) => c.type === "dir").map((c) => c.name);
+      if (dirChildNames.includes("Artigos") || dirChildNames.includes("Minhas Notas")) {
+        result.push({ name: n.name, path: n.path });
+      }
+      walk(n.children);
+    }
+  }
+  walk(nodes);
+  return result;
+}
+
+function noteMatchesGraphFilters(note) {
+  const { theme, tags } = state.graphSettings;
+  if (theme && !(note.folder + "/").startsWith(theme + "/")) return false;
+  if (tags.length && !tags.some((t) => note.tags.includes(t))) return false;
+  return true;
+}
+
+function applyGraphCssVars() {
+  const svgEl = el("graphSvg");
+  if (!svgEl) return;
+  svgEl.style.setProperty("--graph-font-size", state.graphSettings.fontSize + "px");
+  svgEl.style.setProperty("--graph-link-opacity", state.graphSettings.linkIntensity);
+}
+
+function renderGraphThemeFilter() {
+  const sel = el("gsThemeFilter");
+  const themes = collectThemeFolders(state.tree);
+  sel.innerHTML = '<option value="">Todos os temas</option>';
+  for (const t of themes) {
+    const opt = document.createElement("option");
+    opt.value = t.path;
+    opt.textContent = t.name;
+    sel.appendChild(opt);
+  }
+  sel.value = state.graphSettings.theme || "";
+}
+
+function renderGraphTagFilter() {
+  const tagCounts = {};
+  for (const note of Object.values(state.index)) {
+    for (const t of note.tags) tagCounts[t] = (tagCounts[t] || 0) + 1;
+  }
+  const tags = Object.keys(tagCounts).sort();
+  const box = el("gsTagFilter");
+  box.innerHTML = "";
+  for (const tag of tags) {
+    const pill = document.createElement("span");
+    const active = state.graphSettings.tags.includes(tag);
+    pill.className = "tag-pill" + (active ? " active" : "");
+    pill.textContent = tag;
+    pill.addEventListener("click", () => {
+      const idx = state.graphSettings.tags.indexOf(tag);
+      if (idx === -1) state.graphSettings.tags.push(tag);
+      else state.graphSettings.tags.splice(idx, 1);
+      saveGraphSettings();
+      renderGraphTagFilter();
+      renderGraph();
+    });
+    box.appendChild(pill);
+  }
+}
+
+function populateGraphSettingsUI() {
+  el("gsFontSize").value = state.graphSettings.fontSize;
+  el("gsFontSizeVal").textContent = state.graphSettings.fontSize + "px";
+  el("gsNodeSize").value = state.graphSettings.nodeScale;
+  el("gsNodeSizeVal").textContent = state.graphSettings.nodeScale.toFixed(1) + "×";
+  el("gsLinkIntensity").value = state.graphSettings.linkIntensity;
+  el("gsLinkIntensityVal").textContent = state.graphSettings.linkIntensity.toFixed(2);
+  renderGraphThemeFilter();
+  renderGraphTagFilter();
+  applyGraphCssVars();
+}
+
 function folderColor(folder) {
   const top = (folder || "").split("/")[0] || "raiz";
   let hash = 0;
@@ -563,6 +703,7 @@ function forceJiggle(strength) {
 }
 
 function renderGraph() {
+  applyGraphCssVars();
   const svg = d3.select("#graphSvg");
   svg.selectAll("*").remove();
   const wrap = document.getElementById("graphView");
@@ -572,10 +713,12 @@ function renderGraph() {
 
   const nodesMap = new Map();
   for (const [path, note] of Object.entries(state.index)) {
+    if (!noteMatchesGraphFilters(note)) continue;
     nodesMap.set(path, { id: path, title: note.title, folder: note.folder, degree: 0 });
   }
   const links = [];
-  for (const [path, note] of Object.entries(state.index)) {
+  for (const path of nodesMap.keys()) {
+    const note = state.index[path];
     for (const l of note.links) {
       if (l.resolved && l.resolved !== path && nodesMap.has(l.resolved)) {
         links.push({ source: path, target: l.resolved });
@@ -588,8 +731,21 @@ function renderGraph() {
   }
   const nodes = Array.from(nodesMap.values());
 
+  if (nodes.length === 0) {
+    svg
+      .append("text")
+      .attr("x", width / 2)
+      .attr("y", height / 2)
+      .attr("text-anchor", "middle")
+      .attr("fill", "var(--text-dim)")
+      .attr("font-size", 13)
+      .text("Nenhuma nota corresponde aos filtros.");
+    return;
+  }
+
+  const scale = state.graphSettings.nodeScale;
   const maxDegree = Math.max(1, ...nodes.map((n) => n.degree));
-  const radiusScale = d3.scaleSqrt().domain([0, maxDegree]).range([4, 16]).clamp(true);
+  const radiusScale = d3.scaleSqrt().domain([0, maxDegree]).range([4 * scale, 16 * scale]).clamp(true);
   const radiusOf = (d) => radiusScale(d.degree);
 
   const g = svg.append("g");
@@ -683,6 +839,48 @@ el("graphBtn").addEventListener("click", () => {
   el("emptyState").classList.add("hidden");
   el("editorView").classList.add("hidden");
   el("graphView").classList.remove("hidden");
+  el("graphSettingsBtn").classList.remove("hidden");
+  populateGraphSettingsUI();
+  renderGraph();
+});
+
+el("graphSettingsBtn").addEventListener("click", () => {
+  el("graphSettingsPanel").classList.toggle("hidden");
+});
+
+el("gsFontSize").addEventListener("input", (e) => {
+  state.graphSettings.fontSize = parseFloat(e.target.value);
+  el("gsFontSizeVal").textContent = state.graphSettings.fontSize + "px";
+  applyGraphCssVars();
+  saveGraphSettings();
+});
+
+el("gsLinkIntensity").addEventListener("input", (e) => {
+  state.graphSettings.linkIntensity = parseFloat(e.target.value);
+  el("gsLinkIntensityVal").textContent = state.graphSettings.linkIntensity.toFixed(2);
+  applyGraphCssVars();
+  saveGraphSettings();
+});
+
+let nodeSizeDebounce;
+el("gsNodeSize").addEventListener("input", (e) => {
+  state.graphSettings.nodeScale = parseFloat(e.target.value);
+  el("gsNodeSizeVal").textContent = state.graphSettings.nodeScale.toFixed(1) + "×";
+  saveGraphSettings();
+  clearTimeout(nodeSizeDebounce);
+  nodeSizeDebounce = setTimeout(renderGraph, 120);
+});
+
+el("gsThemeFilter").addEventListener("change", (e) => {
+  state.graphSettings.theme = e.target.value;
+  saveGraphSettings();
+  renderGraph();
+});
+
+el("gsReset").addEventListener("click", () => {
+  state.graphSettings = { ...GRAPH_SETTINGS_DEFAULTS, tags: [] };
+  saveGraphSettings();
+  populateGraphSettingsUI();
   renderGraph();
 });
 

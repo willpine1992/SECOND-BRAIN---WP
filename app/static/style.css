@@ -92,6 +92,7 @@ body {
   font-size: 13px;
 }
 .btn:hover { border-color: var(--accent); }
+a.btn { display: inline-block; text-decoration: none; }
 .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
 .btn.danger { color: var(--danger); }
 .icon-btn {
@@ -244,11 +245,63 @@ body {
 .meta-box a:hover { text-decoration: underline; }
 .meta-box .broken-link { color: var(--danger); }
 
-#graphView { flex: 1; min-height: 0; }
+#graphView { flex: 1; min-height: 0; position: relative; }
 #graphSvg { width: 100%; height: 100%; display: block; background: var(--bg); }
 .graph-node circle { stroke: var(--bg); stroke-width: 1.5px; cursor: pointer; }
-.graph-node text { font-size: 7px; fill: var(--text-dim); pointer-events: none; text-anchor: middle; }
-.graph-link { stroke: var(--border); stroke-width: 1px; }
+.graph-node text { font-size: var(--graph-font-size, 6px); fill: var(--text-dim); pointer-events: none; text-anchor: middle; }
+.graph-link { stroke: var(--border); stroke-width: 1px; stroke-opacity: var(--graph-link-opacity, 0.45); }
+
+.graph-settings {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 240px;
+  max-height: calc(100% - 28px);
+  overflow-y: auto;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px 14px;
+  box-shadow: var(--shadow);
+  font-size: 12px;
+  z-index: 10;
+}
+.graph-settings-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-dim);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.gs-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: var(--text-dim);
+  margin-top: 10px;
+  margin-bottom: 3px;
+}
+.gs-label span { color: var(--text); font-family: var(--mono); font-size: 11px; }
+.graph-settings input[type="range"] { width: 100%; accent-color: var(--accent); }
+.graph-settings select {
+  width: 100%;
+  padding: 5px 7px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 12px;
+}
+.gs-tag-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-height: 130px;
+  overflow-y: auto;
+  padding-top: 2px;
+}
+.gs-tag-filter .tag-pill { font-size: 10px; padding: 2px 7px; }
 
 .modal {
   position: fixed;
