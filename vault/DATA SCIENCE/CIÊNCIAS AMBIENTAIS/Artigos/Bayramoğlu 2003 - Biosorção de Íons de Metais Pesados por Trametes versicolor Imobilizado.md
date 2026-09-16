@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/fungos-metais-pesados-biosorcao, processo/biosorcao, matriz/celula-imobilizada, organismo/trametes-versicolor, patricia-melchina]
+tags: [busca/fungos-metais-pesados-biosorcao, processo/biosorcao, matriz/celula-imobilizada, organismo/trametes-versicolor, patricia-melchina]
 data: 2026-09-16
 autores: G. Bayramoğlu, S. Bektaş, M.Y. Arıca
 ano: 2003

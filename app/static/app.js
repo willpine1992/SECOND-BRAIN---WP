@@ -133,9 +133,7 @@ const SOLAR_TAGS = [
   "diario",
   "estatistica",
   "estrategia",
-  "fila-leitura",
   "indice",
-  "literatura",
   "meta",
   "permanente",
   "projeto",
@@ -209,7 +207,7 @@ const state = {
   index: {}, // path -> note meta (from /api/index)
   currentPath: null,
   dirty: false,
-  mode: "edit", // "edit" | "preview"
+  mode: "preview", // "edit" | "preview"
   activeTag: null,
   graphSettings: loadGraphSettings(),
 };
@@ -493,7 +491,7 @@ async function openNote(path) {
   el("notePath").textContent = path;
   el("editorTextarea").value = data.content;
 
-  setMode(state.mode || "edit");
+  setMode(state.mode);
   renderSideMeta(path);
   refreshTreeView();
 }

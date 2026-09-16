@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/atomic-simulation-environment, tema/simulacao-molecular, aplicacao/quimica-computacional-geral]
+tags: [biblioteca/atomic-simulation-environment, tema/simulacao-molecular, aplicacao/quimica-computacional-geral]
 data: 2026-09-15
 autores: A Gautieri, E Pirana
 ano: 2026

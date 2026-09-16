@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, tema/predicao-de-propriedades, tema/geracao-de-moleculas, aplicacao/quimica-computacional-geral]
+tags: [biblioteca/rdkit, tema/predicao-de-propriedades, tema/geracao-de-moleculas, aplicacao/quimica-computacional-geral]
 data: 2026-09-15
 autores: R Liu, T Yuan, M Guo
 ano: 2026

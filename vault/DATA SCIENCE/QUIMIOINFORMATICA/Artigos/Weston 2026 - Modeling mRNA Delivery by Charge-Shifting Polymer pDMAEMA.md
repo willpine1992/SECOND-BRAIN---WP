@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/atomic-simulation-environment, tema/simulacao-molecular, aplicacao/descoberta-de-farmacos]
+tags: [biblioteca/atomic-simulation-environment, tema/simulacao-molecular, aplicacao/descoberta-de-farmacos]
 data: 2026-09-15
 autores: HL Weston, L Nguyen, S Gwaltney
 ano: 2026

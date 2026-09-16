@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, tema/triagem-virtual, tema/docking, aplicacao/descoberta-de-farmacos]
+tags: [biblioteca/rdkit, tema/triagem-virtual, tema/docking, aplicacao/descoberta-de-farmacos]
 data: 2026-09-15
 autores: Y Wang, L Fang, Q Liu, Z Zhang, C Xu, Y Jiang
 ano: 2026

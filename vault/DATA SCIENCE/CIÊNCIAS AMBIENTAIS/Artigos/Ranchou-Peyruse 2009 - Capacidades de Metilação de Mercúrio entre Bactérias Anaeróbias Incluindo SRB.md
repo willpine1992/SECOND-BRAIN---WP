@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/sulfato-reducao-hg-metilmercurio, processo/metilacao, matriz/revisao, sergio-duvoisin-junior]
+tags: [busca/sulfato-reducao-hg-metilmercurio, processo/metilacao, matriz/revisao, sergio-duvoisin-junior]
 data: 2026-09-16
 autores: M. Ranchou-Peyruse, M. Monperrus
 ano: 2009

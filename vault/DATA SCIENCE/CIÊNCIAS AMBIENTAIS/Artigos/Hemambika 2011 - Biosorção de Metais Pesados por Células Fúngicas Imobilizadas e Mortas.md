@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/fungos-metais-pesados-biosorcao, processo/biosorcao, matriz/celula-imobilizada, matriz/biomassa-morta, patricia-melchina]
+tags: [busca/fungos-metais-pesados-biosorcao, processo/biosorcao, matriz/celula-imobilizada, matriz/biomassa-morta, patricia-melchina]
 data: 2026-09-16
 autores: B. Hemambika, M.J. Rani, V.R. Kannan
 ano: 2011

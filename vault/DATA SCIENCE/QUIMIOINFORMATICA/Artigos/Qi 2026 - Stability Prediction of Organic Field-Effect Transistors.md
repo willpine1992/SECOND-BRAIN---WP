@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, tema/predicao-de-propriedades, aplicacao/ciencia-de-materiais]
+tags: [biblioteca/rdkit, tema/predicao-de-propriedades, aplicacao/ciencia-de-materiais]
 data: 2026-09-15
 autores: J Qi, S Chen, H Liu, H Hu, L Zhang, X Chen, L Li, W Hu
 ano: 2026

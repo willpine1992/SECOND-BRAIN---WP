@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/openbabel, tema/triagem-virtual, aplicacao/descoberta-de-farmacos]
+tags: [biblioteca/openbabel, tema/triagem-virtual, aplicacao/descoberta-de-farmacos]
 data: 2026-09-15
 autores: W Wang, K Chen, S Cho, X Li
 ano: 2026

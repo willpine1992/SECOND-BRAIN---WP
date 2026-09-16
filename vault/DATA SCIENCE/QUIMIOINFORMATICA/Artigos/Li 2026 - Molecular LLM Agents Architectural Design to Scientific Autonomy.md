@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/atomic-simulation-environment, tema/quimica-computacional-geral, aplicacao/quimica-computacional-geral]
+tags: [biblioteca/atomic-simulation-environment, tema/quimica-computacional-geral, aplicacao/quimica-computacional-geral]
 data: 2026-09-15
 autores: J Li, W Zhang, W Wang, Y Ren, W Liu, C Mao, Y Li et al.
 ano: 2026

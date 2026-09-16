@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/srb-mercurio-organico, processo/metilacao, matriz/sedimento-estuarino, sergio-duvoisin-junior]
+tags: [busca/srb-mercurio-organico, processo/metilacao, matriz/sedimento-estuarino, sergio-duvoisin-junior]
 data: 2026-09-16
 autores: G.C. Compeau, R. Bartha
 ano: 1987

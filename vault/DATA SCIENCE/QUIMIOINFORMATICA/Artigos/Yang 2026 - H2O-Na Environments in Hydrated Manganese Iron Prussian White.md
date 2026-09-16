@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/mdanalysis, tema/simulacao-molecular, aplicacao/ciencia-de-materiais]
+tags: [biblioteca/mdanalysis, tema/simulacao-molecular, aplicacao/ciencia-de-materiais]
 data: 2026-09-15
 autores: YC Yang, L Pineau, D Sarkar, L Simonin, D Peralta et al.
 ano: 2026

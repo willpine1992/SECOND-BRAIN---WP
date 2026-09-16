@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, tema/predicao-de-propriedades, tema/interpretabilidade-xai, aplicacao/ciencia-de-alimentos]
+tags: [biblioteca/rdkit, tema/predicao-de-propriedades, tema/interpretabilidade-xai, aplicacao/ciencia-de-alimentos]
 data: 2026-09-15
 autores: W Li, H Yin, X Liu, Y Liu, Z Zheng
 ano: 2026

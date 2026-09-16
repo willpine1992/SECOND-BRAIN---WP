@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/srb-mercurio-organico, processo/metilacao, matriz/wetland, sergio-duvoisin-junior]
+tags: [busca/srb-mercurio-organico, processo/metilacao, matriz/wetland, sergio-duvoisin-junior]
 data: 2026-09-16
 autores: J.K. King, S.M. Harmon, T.T. Fu, J.B. Gladden
 ano: 2002

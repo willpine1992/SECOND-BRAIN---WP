@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/fungos-metais-pesados-biosorcao, processo/biosorcao, matriz/micelio, organismo/fusarium-flocciferum, patricia-melchina]
+tags: [busca/fungos-metais-pesados-biosorcao, processo/biosorcao, matriz/micelio, organismo/fusarium-flocciferum, patricia-melchina]
 data: 2026-09-16
 autores: A. Delgado, A.M. Anselmo
 ano: 1998

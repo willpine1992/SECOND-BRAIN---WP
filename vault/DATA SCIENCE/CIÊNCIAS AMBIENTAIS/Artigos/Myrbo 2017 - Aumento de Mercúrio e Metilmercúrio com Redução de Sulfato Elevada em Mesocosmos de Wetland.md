@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/sulfato-reducao-hg-metilmercurio, processo/metilacao, matriz/wetland, sergio-duvoisin-junior]
+tags: [busca/sulfato-reducao-hg-metilmercurio, processo/metilacao, matriz/wetland, sergio-duvoisin-junior]
 data: 2026-09-16
 autores: A. Myrbo, E.B. Swain, N.W. Johnson et al.
 ano: 2017

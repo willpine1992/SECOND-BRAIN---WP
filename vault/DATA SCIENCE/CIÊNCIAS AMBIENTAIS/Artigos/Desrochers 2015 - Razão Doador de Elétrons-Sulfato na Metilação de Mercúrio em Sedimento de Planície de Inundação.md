@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/sulfato-reducao-hg-metilmercurio, processo/metilacao, matriz/sedimento-de-planicie-de-inundacao, sergio-duvoisin-junior]
+tags: [busca/sulfato-reducao-hg-metilmercurio, processo/metilacao, matriz/sedimento-de-planicie-de-inundacao, sergio-duvoisin-junior]
 data: 2026-09-16
 autores: K.A.N. Desrochers, K.M.A. Paulson, C.J. Ptacek et al.
 ano: 2015

@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/mordred, biblioteca/rdkit, tema/predicao-de-propriedades, tema/interpretabilidade-xai, aplicacao/descoberta-de-farmacos]
+tags: [biblioteca/mordred, biblioteca/rdkit, tema/predicao-de-propriedades, tema/interpretabilidade-xai, aplicacao/descoberta-de-farmacos]
 data: 2026-09-15
 autores: K Bhasin, S Engle, DK Dhaked
 ano: 2026

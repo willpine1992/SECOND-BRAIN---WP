@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, tema/geracao-de-moleculas, aplicacao/descoberta-de-farmacos]
+tags: [biblioteca/rdkit, tema/geracao-de-moleculas, aplicacao/descoberta-de-farmacos]
 data: 2026-09-15
 autores: T Gao, Z Su, J Li, W Gao, Z Ying, Z Zhao, F Zhang et al.
 ano: 2026

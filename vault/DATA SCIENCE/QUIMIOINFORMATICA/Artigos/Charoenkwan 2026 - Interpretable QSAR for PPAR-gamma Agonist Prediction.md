@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, tema/predicao-de-propriedades, tema/docking, aplicacao/descoberta-de-farmacos]
+tags: [biblioteca/rdkit, tema/predicao-de-propriedades, tema/docking, aplicacao/descoberta-de-farmacos]
 data: 2026-09-15
 autores: P Charoenkwan, I Meewan, N Schaduangrat et al.
 ano: 2026

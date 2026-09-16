@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/srb-mercurio-organico, processo/metilacao, matriz/coluna-dagua, sergio-duvoisin-junior]
+tags: [busca/srb-mercurio-organico, processo/metilacao, matriz/coluna-dagua, sergio-duvoisin-junior]
 data: 2026-09-16
 autores: D. Achá, H. Hintelmann, C.A. Pabón
 ano: 2012

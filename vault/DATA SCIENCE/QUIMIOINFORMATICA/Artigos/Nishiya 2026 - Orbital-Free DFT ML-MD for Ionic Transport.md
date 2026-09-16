@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/atomic-simulation-environment, tema/simulacao-molecular, aplicacao/ciencia-de-materiais]
+tags: [biblioteca/atomic-simulation-environment, tema/simulacao-molecular, aplicacao/ciencia-de-materiais]
 data: 2026-09-15
 autores: Y Nishiya, H Nakata, Y Harada, Y Matsushita
 ano: 2026

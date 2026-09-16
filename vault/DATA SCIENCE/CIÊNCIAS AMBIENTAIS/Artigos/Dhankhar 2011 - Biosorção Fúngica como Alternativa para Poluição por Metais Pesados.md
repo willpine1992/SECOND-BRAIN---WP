@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/fungos-metais-pesados-biosorcao, processo/biosorcao, matriz/revisao, patricia-melchina]
+tags: [busca/fungos-metais-pesados-biosorcao, processo/biosorcao, matriz/revisao, patricia-melchina]
 data: 2026-09-16
 autores: R. Dhankhar, A. Hooda
 ano: 2011

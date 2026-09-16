@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, tema/curadoria-de-dados-quimicos, aplicacao/ciencia-de-materiais]
+tags: [biblioteca/rdkit, tema/curadoria-de-dados-quimicos, aplicacao/ciencia-de-materiais]
 data: 2026-09-15
 autores: W Feng, L Liu, H Li
 ano: 2026

@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/mdanalysis, tema/simulacao-molecular, aplicacao/ciencia-de-materiais]
+tags: [biblioteca/mdanalysis, tema/simulacao-molecular, aplicacao/ciencia-de-materiais]
 data: 2026-09-15
 autores: G Huang, G Wang, O Chen, Q Cheng, G Chen, C Ma
 ano: 2026

@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/sulfato-reducao-hg-metilmercurio, processo/desmetilacao, matriz/cultura-pura, matriz/sedimento, sergio-duvoisin-junior]
+tags: [busca/sulfato-reducao-hg-metilmercurio, processo/desmetilacao, matriz/cultura-pura, matriz/sedimento, sergio-duvoisin-junior]
 data: 2026-09-16
 autores: R.S. Oremland, C.W. Culbertson et al.
 ano: 1991

@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, biblioteca/mordred, tema/predicao-de-propriedades, aplicacao/ciencia-de-materiais]
+tags: [biblioteca/rdkit, biblioteca/mordred, tema/predicao-de-propriedades, aplicacao/ciencia-de-materiais]
 data: 2026-09-15
 autores: HAK Kyhoiesh, MA El-Sayed, IH El Azab et al.
 ano: 2026

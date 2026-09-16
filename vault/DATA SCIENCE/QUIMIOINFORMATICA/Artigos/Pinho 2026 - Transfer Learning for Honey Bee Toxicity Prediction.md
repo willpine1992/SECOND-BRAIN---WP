@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, tema/predicao-de-propriedades, aplicacao/quimica-ambiental]
+tags: [biblioteca/rdkit, tema/predicao-de-propriedades, aplicacao/quimica-ambiental]
 data: 2026-09-15
 autores: AV de Souza Pinho, EB de Alencar Filho et al.
 ano: 2026

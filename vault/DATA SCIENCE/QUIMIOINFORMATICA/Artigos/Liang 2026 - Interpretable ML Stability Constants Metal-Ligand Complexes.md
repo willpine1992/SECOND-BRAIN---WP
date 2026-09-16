@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, tema/predicao-de-propriedades, tema/interpretabilidade-xai, aplicacao/quimica-computacional-geral]
+tags: [biblioteca/rdkit, tema/predicao-de-propriedades, tema/interpretabilidade-xai, aplicacao/quimica-computacional-geral]
 data: 2026-09-15
 autores: R Liang, R Ma, C Miao, W Liu, Z Zhu, J Qi, P Cui et al.
 ano: 2026

@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/padel-descriptor, tema/predicao-de-propriedades, tema/docking, aplicacao/descoberta-de-farmacos]
+tags: [biblioteca/padel-descriptor, tema/predicao-de-propriedades, tema/docking, aplicacao/descoberta-de-farmacos]
 data: 2026-09-15
 autores: P Singh, HC Upadhyay, S Maurya
 ano: 2026

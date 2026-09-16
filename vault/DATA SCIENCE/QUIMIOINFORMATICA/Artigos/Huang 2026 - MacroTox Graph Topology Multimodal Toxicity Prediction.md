@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/mordred, tema/predicao-de-propriedades, aplicacao/descoberta-de-farmacos]
+tags: [biblioteca/mordred, tema/predicao-de-propriedades, aplicacao/descoberta-de-farmacos]
 data: 2026-09-15
 autores: H Huang, Q Wang, M Zhang, P Dou, X Yang, H Li, S Li
 ano: 2026

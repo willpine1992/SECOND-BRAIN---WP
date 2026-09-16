@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/sulfato-reducao-hg-metilmercurio, processo/metilacao, processo/desmetilacao, matriz/sedimento-fluvial, sergio-duvoisin-junior]
+tags: [busca/sulfato-reducao-hg-metilmercurio, processo/metilacao, processo/desmetilacao, matriz/sedimento-fluvial, sergio-duvoisin-junior]
 data: 2026-09-16
 autores: R.Q. Yu, J.R. Flanders, E.E. Mack, R. Turner
 ano: 2012

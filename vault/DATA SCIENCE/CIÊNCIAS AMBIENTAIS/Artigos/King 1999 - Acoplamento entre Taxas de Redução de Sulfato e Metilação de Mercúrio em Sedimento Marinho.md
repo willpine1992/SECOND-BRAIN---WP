@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/sulfato-reducao-hg-metilmercurio, processo/metilacao, matriz/sedimento-marinho, sergio-duvoisin-junior]
+tags: [busca/sulfato-reducao-hg-metilmercurio, processo/metilacao, matriz/sedimento-marinho, sergio-duvoisin-junior]
 data: 2026-09-16
 autores: J.K. King, F.M. Saunders, R.F. Lee
 ano: 1999

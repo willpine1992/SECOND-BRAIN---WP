@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/sulfato-reducao-hg-metilmercurio, processo/metilacao, processo/desmetilacao, matriz/reator-anaerobio, sergio-duvoisin-junior]
+tags: [busca/sulfato-reducao-hg-metilmercurio, processo/metilacao, processo/desmetilacao, matriz/reator-anaerobio, sergio-duvoisin-junior]
 data: 2026-09-16
 autores: H. Du, T. Sun, Y. Liu, S. An, H. Xie, D. Wang, Y. Igarashi et al.
 ano: 2021

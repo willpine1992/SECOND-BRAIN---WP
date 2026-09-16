@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, tema/planejamento-de-sintese, aplicacao/quimica-computacional-geral]
+tags: [biblioteca/rdkit, tema/planejamento-de-sintese, aplicacao/quimica-computacional-geral]
 data: 2026-09-15
 autores: WW Sprague
 ano: 2026

@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, tema/triagem-virtual, aplicacao/descoberta-de-farmacos]
+tags: [biblioteca/rdkit, tema/triagem-virtual, aplicacao/descoberta-de-farmacos]
 data: 2026-09-15
 autores: H Raza
 ano: 2026

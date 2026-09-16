@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/mordred, tema/geracao-de-moleculas, tema/predicao-de-propriedades, aplicacao/ciencia-de-materiais]
+tags: [biblioteca/mordred, tema/geracao-de-moleculas, tema/predicao-de-propriedades, aplicacao/ciencia-de-materiais]
 data: 2026-09-15
 autores: S Chen, C Huang, J Hong, Y He, Y Qiao, Y Zhao et al.
 ano: 2026

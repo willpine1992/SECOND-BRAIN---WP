@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/atomic-simulation-environment, tema/simulacao-molecular, aplicacao/ciencia-de-materiais]
+tags: [biblioteca/atomic-simulation-environment, tema/simulacao-molecular, aplicacao/ciencia-de-materiais]
 data: 2026-09-15
 autores: ET Marcial, L Chaudhary, O Gorbunova et al.
 ano: 2026

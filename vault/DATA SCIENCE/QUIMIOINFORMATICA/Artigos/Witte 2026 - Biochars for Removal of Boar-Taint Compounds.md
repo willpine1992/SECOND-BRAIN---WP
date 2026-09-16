@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, tema/predicao-de-propriedades, aplicacao/ciencia-de-alimentos]
+tags: [biblioteca/rdkit, tema/predicao-de-propriedades, aplicacao/ciencia-de-alimentos]
 data: 2026-09-15
 autores: F Witte, A Juadjur, V Heinz, C Visscher, J Weiss et al.
 ano: 2026

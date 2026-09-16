@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/sulfato-reducao-hg-metilmercurio, processo/metilacao, matriz/lago, matriz/coluna-dagua, sergio-duvoisin-junior]
+tags: [busca/sulfato-reducao-hg-metilmercurio, processo/metilacao, matriz/lago, matriz/coluna-dagua, sergio-duvoisin-junior]
 data: 2026-09-16
 autores: B.D. Peterson, S.E. Janssen, B.A. Poulin et al.
 ano: 2025

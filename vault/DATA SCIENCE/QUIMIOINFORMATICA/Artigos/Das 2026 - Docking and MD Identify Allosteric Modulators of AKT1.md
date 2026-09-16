@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/mdanalysis, tema/docking, aplicacao/descoberta-de-farmacos]
+tags: [biblioteca/mdanalysis, tema/docking, aplicacao/descoberta-de-farmacos]
 data: 2026-09-15
 autores: R Das, A Sultana, K Das, D Chowdhury, SW Choi et al.
 ano: 2026

@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/fungos-metais-pesados-biosorcao, processo/biosorcao, matriz/isolados-microbianos, matriz/efluente-industrial, patricia-melchina]
+tags: [busca/fungos-metais-pesados-biosorcao, processo/biosorcao, matriz/isolados-microbianos, matriz/efluente-industrial, patricia-melchina]
 data: 2026-09-16
 autores: S. Congeevaram, S. Dhanarani, J. Park, M. Dexilin
 ano: 2007

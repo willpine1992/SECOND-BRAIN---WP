@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/atomic-simulation-environment, tema/simulacao-molecular, aplicacao/quimica-analitica]
+tags: [biblioteca/atomic-simulation-environment, tema/simulacao-molecular, aplicacao/quimica-analitica]
 data: 2026-09-15
 autores: C Schaefer, J Jašík, P Španěl
 ano: 2026

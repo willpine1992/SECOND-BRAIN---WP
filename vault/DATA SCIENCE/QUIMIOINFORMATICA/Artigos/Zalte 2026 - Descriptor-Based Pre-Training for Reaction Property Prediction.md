@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, tema/predicao-de-propriedades, aplicacao/quimica-computacional-geral]
+tags: [biblioteca/rdkit, tema/predicao-de-propriedades, aplicacao/quimica-computacional-geral]
 data: 2026-09-15
 autores: AS Zalte, C Fang, Y Zheng, E Metwally, A Cheng et al.
 ano: 2026

@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/torchdrug, tema/predicao-de-propriedades, tema/geracao-de-moleculas, aplicacao/ciencia-de-materiais]
+tags: [biblioteca/torchdrug, tema/predicao-de-propriedades, tema/geracao-de-moleculas, aplicacao/ciencia-de-materiais]
 data: 2026-09-15
 autores: T Yue, Y Li
 ano: 2026

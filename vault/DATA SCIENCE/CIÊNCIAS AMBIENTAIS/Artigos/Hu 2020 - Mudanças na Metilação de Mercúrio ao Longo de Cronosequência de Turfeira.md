@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/sulfato-reducao-hg-metilmercurio, processo/metilacao, matriz/turfeira, sergio-duvoisin-junior]
+tags: [busca/sulfato-reducao-hg-metilmercurio, processo/metilacao, matriz/turfeira, sergio-duvoisin-junior]
 data: 2026-09-16
 autores: H. Hu, B. Wang, A.G. Bravo, E. Björn, U. Skyllberg et al.
 ano: 2020

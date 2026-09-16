@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/pyscf, tema/simulacao-molecular, aplicacao/quimica-computacional-geral]
+tags: [biblioteca/pyscf, tema/simulacao-molecular, aplicacao/quimica-computacional-geral]
 data: 2026-09-15
 autores: M Müller, J Bai, W Gottstein, A Mandal, M Nazeri et al.
 ano: 2026

@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/srb-mercurio-organico, processo/metilacao, matriz/lodo-ativado, sergio-duvoisin-junior]
+tags: [busca/srb-mercurio-organico, processo/metilacao, matriz/lodo-ativado, sergio-duvoisin-junior]
 data: 2026-09-16
 autores: J. Wang, L. Zhang, Y. Kang, G. Chen et al.
 ano: 2018

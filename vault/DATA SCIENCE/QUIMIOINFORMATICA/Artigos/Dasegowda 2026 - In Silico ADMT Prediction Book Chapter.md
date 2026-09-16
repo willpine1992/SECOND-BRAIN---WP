@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, tema/predicao-de-propriedades, aplicacao/descoberta-de-farmacos]
+tags: [biblioteca/rdkit, tema/predicao-de-propriedades, aplicacao/descoberta-de-farmacos]
 data: 2026-09-15
 autores: M Dasegowda, HD Sahana, M Sajana, M Brunda et al.
 ano: 2026

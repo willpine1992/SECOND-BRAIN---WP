@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, tema/visualizacao-de-espaco-quimico, aplicacao/quimica-computacional-geral]
+tags: [biblioteca/rdkit, tema/visualizacao-de-espaco-quimico, aplicacao/quimica-computacional-geral]
 data: 2026-09-15
 autores: A Surendran, K Zsigmond, L Chen et al.
 ano: 2026

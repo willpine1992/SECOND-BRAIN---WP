@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura]
+tags: []
 data: {{date}}
 autores: 
 ano: 

@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, tema/predicao-de-propriedades, aplicacao/quimica-ambiental]
+tags: [biblioteca/rdkit, tema/predicao-de-propriedades, aplicacao/quimica-ambiental]
 data: 2026-09-15
 autores: Y Qiu, Y Wu, F Wan, Y Gao, S Zhao, S Zhuang, G Jiang
 ano: 2026

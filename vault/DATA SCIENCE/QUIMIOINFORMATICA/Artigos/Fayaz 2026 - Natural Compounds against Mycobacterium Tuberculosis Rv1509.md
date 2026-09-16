@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/mdanalysis, tema/docking, aplicacao/descoberta-de-farmacos]
+tags: [biblioteca/mdanalysis, tema/docking, aplicacao/descoberta-de-farmacos]
 data: 2026-09-15
 autores: H Fayaz, W Ali, G Shrivastava, SE Hasnain et al.
 ano: 2026

@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/atomic-simulation-environment, tema/simulacao-molecular, aplicacao/quimica-computacional-geral]
+tags: [biblioteca/atomic-simulation-environment, tema/simulacao-molecular, aplicacao/quimica-computacional-geral]
 data: 2026-09-15
 autores: Y Huang, Z Zhang, F Li, K Wu, G Li
 ano: 2026

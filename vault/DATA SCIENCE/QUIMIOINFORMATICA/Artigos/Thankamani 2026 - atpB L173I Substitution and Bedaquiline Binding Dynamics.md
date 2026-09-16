@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/mdanalysis, tema/simulacao-molecular, aplicacao/descoberta-de-farmacos]
+tags: [biblioteca/mdanalysis, tema/simulacao-molecular, aplicacao/descoberta-de-farmacos]
 data: 2026-09-15
 autores: A Thankamani, GP Doss C
 ano: 2026

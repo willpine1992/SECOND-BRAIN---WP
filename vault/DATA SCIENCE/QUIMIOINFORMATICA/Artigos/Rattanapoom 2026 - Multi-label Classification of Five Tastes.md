@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, biblioteca/mordred, tema/predicao-de-propriedades, aplicacao/ciencia-de-alimentos]
+tags: [biblioteca/rdkit, biblioteca/mordred, tema/predicao-de-propriedades, aplicacao/ciencia-de-alimentos]
 data: 2026-09-15
 autores: K Rattanapoom, A Petchkongkaew, S Kitsiranuwat
 ano: 2026

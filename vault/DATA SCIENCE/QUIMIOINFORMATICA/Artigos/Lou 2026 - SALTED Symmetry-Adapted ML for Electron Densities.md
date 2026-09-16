@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/pyscf, tema/simulacao-molecular, aplicacao/quimica-computacional-geral]
+tags: [biblioteca/pyscf, tema/simulacao-molecular, aplicacao/quimica-computacional-geral]
 data: 2026-09-15
 autores: Z Lou, AM Lewis, T Bernhard, L Seifert, A Salcedo et al.
 ano: 2026

@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/srb-mercurio-organico, processo/metilacao, matriz/sedimento-de-mangue, sergio-duvoisin-junior]
+tags: [busca/srb-mercurio-organico, processo/metilacao, matriz/sedimento-de-mangue, sergio-duvoisin-junior]
 data: 2026-09-16
 autores: R.R.S. Correia, J.R.D. Guimarães
 ano: 2017

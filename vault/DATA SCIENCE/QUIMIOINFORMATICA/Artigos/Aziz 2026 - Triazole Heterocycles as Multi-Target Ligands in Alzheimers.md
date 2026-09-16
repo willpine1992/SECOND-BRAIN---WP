@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/mdanalysis, tema/docking, aplicacao/descoberta-de-farmacos]
+tags: [biblioteca/mdanalysis, tema/docking, aplicacao/descoberta-de-farmacos]
 data: 2026-09-15
 autores: H Aziz, IU Khan, A Saeed, A Munir, SU Rehman
 ano: 2026

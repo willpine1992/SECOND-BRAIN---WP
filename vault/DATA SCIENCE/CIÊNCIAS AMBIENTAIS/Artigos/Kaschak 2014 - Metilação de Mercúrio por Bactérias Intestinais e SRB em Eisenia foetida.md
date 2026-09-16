@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/srb-mercurio-organico, processo/metilacao, matriz/tecido-animal, organismo/eisenia-foetida, sergio-duvoisin-junior]
+tags: [busca/srb-mercurio-organico, processo/metilacao, matriz/tecido-animal, organismo/eisenia-foetida, sergio-duvoisin-junior]
 data: 2026-09-16
 autores: E. Kaschak, B. Knopf, J.H. Petersen, N.H. Bings et al.
 ano: 2014

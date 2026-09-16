@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/sulfato-reducao-hg-metilmercurio, processo/metilacao, matriz/lodo-de-esgoto, organismo/methanosarcina, sergio-duvoisin-junior]
+tags: [busca/sulfato-reducao-hg-metilmercurio, processo/metilacao, matriz/lodo-de-esgoto, organismo/methanosarcina, sergio-duvoisin-junior]
 data: 2026-09-16
 autores: B. Xiong, H. Cheng, Y. Deng, T. Imanaka, Y. Igarashi et al.
 ano: 2025

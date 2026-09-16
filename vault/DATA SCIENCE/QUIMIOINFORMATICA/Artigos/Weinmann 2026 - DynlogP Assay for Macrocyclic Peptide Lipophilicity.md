@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, tema/predicao-de-propriedades, aplicacao/descoberta-de-farmacos]
+tags: [biblioteca/rdkit, tema/predicao-de-propriedades, aplicacao/descoberta-de-farmacos]
 data: 2026-09-15
 autores: C Weinmann, F Waibl, S Käser, F Casagrande et al.
 ano: 2026

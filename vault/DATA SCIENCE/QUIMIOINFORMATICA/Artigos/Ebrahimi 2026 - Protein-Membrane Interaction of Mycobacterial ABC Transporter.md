@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/mdanalysis, tema/simulacao-molecular, aplicacao/quimica-computacional-geral]
+tags: [biblioteca/mdanalysis, tema/simulacao-molecular, aplicacao/quimica-computacional-geral]
 data: 2026-09-15
 autores: M Ebrahimi, AR Mehdipour
 ano: 2026

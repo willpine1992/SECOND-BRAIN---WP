@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/srb-mercurio-organico, processo/metilacao, matriz/cultura-pura, organismo/desulfovibrio-desulfuricans, sergio-duvoisin-junior]
+tags: [busca/srb-mercurio-organico, processo/metilacao, matriz/cultura-pura, organismo/desulfovibrio-desulfuricans, sergio-duvoisin-junior]
 data: 2026-09-16
 autores: H.Y.T. Truong, Y.W. Chen, N. Belzile
 ano: 2013

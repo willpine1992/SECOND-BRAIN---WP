@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/atomic-simulation-environment, tema/simulacao-molecular, aplicacao/ciencia-de-materiais]
+tags: [biblioteca/atomic-simulation-environment, tema/simulacao-molecular, aplicacao/ciencia-de-materiais]
 data: 2026-09-15
 autores: MF Maahury, A Natawardaja, CN Purwanto, AW Sakti et al.
 ano: 2026

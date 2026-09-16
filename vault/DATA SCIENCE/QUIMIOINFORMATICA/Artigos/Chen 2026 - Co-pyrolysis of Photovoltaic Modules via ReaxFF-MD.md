@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/mdanalysis, tema/simulacao-molecular, aplicacao/ciencia-de-materiais]
+tags: [biblioteca/mdanalysis, tema/simulacao-molecular, aplicacao/ciencia-de-materiais]
 data: 2026-09-15
 autores: X Chen, Y Wei, Y Long, X Guo, Y Liu, Y Huang, Q Lu
 ano: 2026

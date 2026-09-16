@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/openbabel, tema/docking, aplicacao/descoberta-de-farmacos]
+tags: [biblioteca/openbabel, tema/docking, aplicacao/descoberta-de-farmacos]
 data: 2026-09-15
 autores: S Meryem, BM Tugfan, O Abdulsamet, OB Birsen
 ano: 2026

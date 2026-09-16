@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, tema/predicao-de-propriedades, aplicacao/descoberta-de-farmacos]
+tags: [biblioteca/rdkit, tema/predicao-de-propriedades, aplicacao/descoberta-de-farmacos]
 data: 2026-09-15
 autores: Y Liu, Y Ye, T Tang, J Luo, W Tao, X Luo
 ano: 2026

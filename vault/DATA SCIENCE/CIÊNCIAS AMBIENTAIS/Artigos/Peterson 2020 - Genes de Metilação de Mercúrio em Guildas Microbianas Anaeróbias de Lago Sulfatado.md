@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/sulfato-reducao-hg-metilmercurio, processo/metilacao, matriz/lago, sergio-duvoisin-junior]
+tags: [busca/sulfato-reducao-hg-metilmercurio, processo/metilacao, matriz/lago, sergio-duvoisin-junior]
 data: 2026-09-16
 autores: B.D. Peterson, E.A. McDaniel, A.G. Schmidt
 ano: 2020

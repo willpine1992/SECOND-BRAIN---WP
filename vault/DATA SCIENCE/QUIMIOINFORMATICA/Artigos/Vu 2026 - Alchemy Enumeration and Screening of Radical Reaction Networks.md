@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, biblioteca/openbabel, tema/curadoria-de-dados-quimicos, aplicacao/quimica-computacional-geral]
+tags: [biblioteca/rdkit, biblioteca/openbabel, tema/curadoria-de-dados-quimicos, aplicacao/quimica-computacional-geral]
 data: 2026-09-15
 autores: LM Vu, P Sharmesh, M Kar, T Tran, SA Tawfik
 ano: 2026

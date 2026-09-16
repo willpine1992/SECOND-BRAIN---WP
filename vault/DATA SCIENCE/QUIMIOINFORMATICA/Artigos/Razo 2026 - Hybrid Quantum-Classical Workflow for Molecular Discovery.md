@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, tema/computacao-quantica, aplicacao/quimica-computacional-geral]
+tags: [biblioteca/rdkit, tema/computacao-quantica, aplicacao/quimica-computacional-geral]
 data: 2026-09-15
 autores: C Razo, B Ndlovu
 ano: 2026

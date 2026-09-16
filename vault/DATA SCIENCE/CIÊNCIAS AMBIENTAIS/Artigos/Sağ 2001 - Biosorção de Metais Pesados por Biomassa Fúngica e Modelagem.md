@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/fungos-metais-pesados-biosorcao, processo/biosorcao, matriz/revisao, matriz/reator, patricia-melchina]
+tags: [busca/fungos-metais-pesados-biosorcao, processo/biosorcao, matriz/revisao, matriz/reator, patricia-melchina]
 data: 2026-09-16
 autores: Y. Sağ
 ano: 2001

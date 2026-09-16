@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/srb-mercurio-organico, processo/metilacao, matriz/cultura-pura, sergio-duvoisin-junior]
+tags: [busca/srb-mercurio-organico, processo/metilacao, matriz/cultura-pura, sergio-duvoisin-junior]
 data: 2026-09-16
 autores: V. Perrot, R. Bridou, Z. Pedrero et al.
 ano: 2015

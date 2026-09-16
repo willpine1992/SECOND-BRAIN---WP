@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/sulfato-reducao-hg-metilmercurio, processo/metilacao, processo/desmetilacao, matriz/arrozal, sergio-duvoisin-junior]
+tags: [busca/sulfato-reducao-hg-metilmercurio, processo/metilacao, processo/desmetilacao, matriz/arrozal, sergio-duvoisin-junior]
 data: 2026-09-16
 autores: Q. Wu, B. Wang, H. Hu, A.G. Bravo, K. Bishop et al.
 ano: 2023

@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, tema/curadoria-de-dados-quimicos, aplicacao/quimica-analitica]
+tags: [biblioteca/rdkit, tema/curadoria-de-dados-quimicos, aplicacao/quimica-analitica]
 data: 2026-09-15
 autores: D Bhandari, HA Paz, K Henderson, KK Adepu et al.
 ano: 2026

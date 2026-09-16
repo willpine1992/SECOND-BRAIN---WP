@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/sulfato-reducao-hg-metilmercurio, processo/metilacao, matriz/sedimento-de-agua-doce, sergio-duvoisin-junior]
+tags: [busca/sulfato-reducao-hg-metilmercurio, processo/metilacao, matriz/sedimento-de-agua-doce, sergio-duvoisin-junior]
 data: 2026-09-16
 autores: C.C. Gilmour, E.A. Henry, R. Mitchell
 ano: 1992

@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/fungos-metais-pesados-biosorcao, processo/biosorcao, matriz/celula-fungica-modificada, patricia-melchina]
+tags: [busca/fungos-metais-pesados-biosorcao, processo/biosorcao, matriz/celula-fungica-modificada, patricia-melchina]
 data: 2026-09-16
 autores: N. Lu, T. Hu, Y. Zhai, H. Qin, J. Aliyeva, H. Zhang
 ano: 2020

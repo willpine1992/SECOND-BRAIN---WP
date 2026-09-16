@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/mordred, tema/predicao-de-propriedades, tema/interpretabilidade-xai, aplicacao/descoberta-de-farmacos]
+tags: [biblioteca/mordred, tema/predicao-de-propriedades, tema/interpretabilidade-xai, aplicacao/descoberta-de-farmacos]
 data: 2026-09-15
 autores: A Manan, S Ilyas
 ano: 2026

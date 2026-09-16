@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/openbabel, biblioteca/rdkit, tema/predicao-de-propriedades, aplicacao/descoberta-de-farmacos]
+tags: [biblioteca/openbabel, biblioteca/rdkit, tema/predicao-de-propriedades, aplicacao/descoberta-de-farmacos]
 data: 2026-09-15
 autores: JN Eaves
 ano: 2026

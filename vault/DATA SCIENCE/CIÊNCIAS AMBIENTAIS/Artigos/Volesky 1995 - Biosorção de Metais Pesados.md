@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/fungos-metais-pesados-biosorcao, processo/biosorcao, matriz/micelio, matriz/revisao, patricia-melchina]
+tags: [busca/fungos-metais-pesados-biosorcao, processo/biosorcao, matriz/micelio, matriz/revisao, patricia-melchina]
 data: 2026-09-16
 autores: B. Volesky, Z.R. Holan
 ano: 1995

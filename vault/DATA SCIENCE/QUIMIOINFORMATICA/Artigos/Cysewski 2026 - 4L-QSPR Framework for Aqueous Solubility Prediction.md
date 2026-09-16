@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/padel-descriptor, biblioteca/rdkit, tema/predicao-de-propriedades, aplicacao/quimica-computacional-geral]
+tags: [biblioteca/padel-descriptor, biblioteca/rdkit, tema/predicao-de-propriedades, aplicacao/quimica-computacional-geral]
 data: 2026-09-15
 autores: P Cysewski
 ano: 2026

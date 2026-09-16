@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, tema/interpretabilidade-xai, aplicacao/quimica-computacional-geral]
+tags: [biblioteca/rdkit, tema/interpretabilidade-xai, aplicacao/quimica-computacional-geral]
 data: 2026-09-15
 autores: J Yao, S Kulkarni
 ano: 2026

@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, tema/curadoria-de-dados-quimicos, aplicacao/quimica-computacional-geral]
+tags: [biblioteca/rdkit, tema/curadoria-de-dados-quimicos, aplicacao/quimica-computacional-geral]
 data: 2026-09-15
 autores: C Whitter, AE Clark, A Pothen, R Khanna
 ano: 2026

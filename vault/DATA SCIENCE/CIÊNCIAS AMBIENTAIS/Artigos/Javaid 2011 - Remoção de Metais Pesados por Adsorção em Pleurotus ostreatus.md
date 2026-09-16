@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/fungos-metais-pesados-biosorcao, processo/biosorcao, organismo/pleurotus-ostreatus, patricia-melchina]
+tags: [busca/fungos-metais-pesados-biosorcao, processo/biosorcao, organismo/pleurotus-ostreatus, patricia-melchina]
 data: 2026-09-16
 autores: A. Javaid, R. Bajwa, U. Shafique, J. Anwar
 ano: 2011

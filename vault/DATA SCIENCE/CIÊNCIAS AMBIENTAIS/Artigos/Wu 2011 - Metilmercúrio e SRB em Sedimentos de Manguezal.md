@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/srb-mercurio-organico, processo/metilacao, matriz/sedimento-de-mangue, sergio-duvoisin-junior]
+tags: [busca/srb-mercurio-organico, processo/metilacao, matriz/sedimento-de-mangue, sergio-duvoisin-junior]
 data: 2026-09-16
 autores: H. Wu, Z. Ding, Y. Liu, J. Liu, H. Yan, J. Pan, L. Li et al.
 ano: 2011

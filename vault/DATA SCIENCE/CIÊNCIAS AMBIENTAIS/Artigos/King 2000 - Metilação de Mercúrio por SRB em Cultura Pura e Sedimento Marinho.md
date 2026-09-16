@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/srb-mercurio-organico, processo/metilacao, matriz/sedimento-marinho, matriz/cultura-pura, sergio-duvoisin-junior]
+tags: [busca/srb-mercurio-organico, processo/metilacao, matriz/sedimento-marinho, matriz/cultura-pura, sergio-duvoisin-junior]
 data: 2026-09-16
 autores: J.K. King, J.E. Kostka, M.E. Frischer et al.
 ano: 2000

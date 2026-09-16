@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/atomic-simulation-environment, tema/simulacao-molecular, aplicacao/catalise]
+tags: [biblioteca/atomic-simulation-environment, tema/simulacao-molecular, aplicacao/catalise]
 data: 2026-09-15
 autores: P Auvinen, M Linnolahti, VH Nissinen, M Suvanto et al.
 ano: 2026

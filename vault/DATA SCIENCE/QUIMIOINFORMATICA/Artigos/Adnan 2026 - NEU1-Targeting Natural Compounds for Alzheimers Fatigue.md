@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/padel-descriptor, tema/predicao-de-propriedades, aplicacao/descoberta-de-farmacos]
+tags: [biblioteca/padel-descriptor, tema/predicao-de-propriedades, aplicacao/descoberta-de-farmacos]
 data: 2026-09-15
 autores: M Adnan, M Patel, M Surti, S Deshpande
 ano: 2026

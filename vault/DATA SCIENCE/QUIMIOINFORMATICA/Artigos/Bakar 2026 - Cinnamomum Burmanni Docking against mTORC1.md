@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/openbabel, tema/docking, aplicacao/descoberta-de-farmacos]
+tags: [biblioteca/openbabel, tema/docking, aplicacao/descoberta-de-farmacos]
 data: 2026-09-15
 autores: A Bakar, SC Lee, V Ningrum
 ano: 2026

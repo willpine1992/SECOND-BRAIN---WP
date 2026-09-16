@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, tema/predicao-de-propriedades, tema/interpretabilidade-xai, aplicacao/descoberta-de-farmacos]
+tags: [biblioteca/rdkit, tema/predicao-de-propriedades, tema/interpretabilidade-xai, aplicacao/descoberta-de-farmacos]
 data: 2026-09-15
 autores: MH Strømme, AGC de Sá, DB Ascher
 ano: 2026

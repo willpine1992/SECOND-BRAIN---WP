@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/mordred, tema/predicao-de-propriedades, aplicacao/quimica-analitica]
+tags: [biblioteca/mordred, tema/predicao-de-propriedades, aplicacao/quimica-analitica]
 data: 2026-09-15
 autores: J Kawakami, MKH Khan, Y Liu, E Dybeck, D Farrand et al.
 ano: 2026

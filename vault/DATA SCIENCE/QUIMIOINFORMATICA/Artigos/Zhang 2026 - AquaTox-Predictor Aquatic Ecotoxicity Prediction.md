@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, biblioteca/openbabel, tema/predicao-de-propriedades, aplicacao/quimica-ambiental]
+tags: [biblioteca/rdkit, biblioteca/openbabel, tema/predicao-de-propriedades, aplicacao/quimica-ambiental]
 data: 2026-09-15
 autores: J Zhang, L Xiong, F Pan, W Li, X Yu, W Song, D Sheng et al.
 ano: 2026

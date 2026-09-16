@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, tema/predicao-de-propriedades, aplicacao/ciencia-de-materiais]
+tags: [biblioteca/rdkit, tema/predicao-de-propriedades, aplicacao/ciencia-de-materiais]
 data: 2026-09-15
 autores: MC Davis, RS Ullberg, JN Schroeder, AH Salij et al.
 ano: 2026

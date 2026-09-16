@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/fungos-metais-pesados-biosorcao, processo/biosorcao, matriz/fungos-halofilicos, patricia-melchina]
+tags: [busca/fungos-metais-pesados-biosorcao, processo/biosorcao, matriz/fungos-halofilicos, patricia-melchina]
 data: 2026-09-16
 autores: A. Bano, J. Hussain, A. Akbar, K. Mehmood, M. Anwar
 ano: 2018

@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/mdanalysis, tema/docking, aplicacao/descoberta-de-farmacos]
+tags: [biblioteca/mdanalysis, tema/docking, aplicacao/descoberta-de-farmacos]
 data: 2026-09-15
 autores: P Gupta, P Sharma, AK Yadav, P Bansal, A Kumar
 ano: 2026

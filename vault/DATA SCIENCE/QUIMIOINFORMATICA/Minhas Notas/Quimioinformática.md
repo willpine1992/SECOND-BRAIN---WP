@@ -1,5 +1,5 @@
 ---
-tags: [índice, fila-leitura]
+tags: [índice]
 data: 2026-09-15
 ---
 

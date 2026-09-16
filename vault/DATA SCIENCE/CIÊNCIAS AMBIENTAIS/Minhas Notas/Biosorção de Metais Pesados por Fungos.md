@@ -1,5 +1,5 @@
 ---
-tags: [índice, fila-leitura, patricia-melchina]
+tags: [índice, patricia-melchina]
 data: 2026-09-16
 ---
 

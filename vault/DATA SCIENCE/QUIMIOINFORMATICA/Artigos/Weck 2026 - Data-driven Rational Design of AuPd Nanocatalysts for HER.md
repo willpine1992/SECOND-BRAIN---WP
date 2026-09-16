@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/atomic-simulation-environment, tema/predicao-de-propriedades, aplicacao/ciencia-de-materiais]
+tags: [biblioteca/atomic-simulation-environment, tema/predicao-de-propriedades, aplicacao/ciencia-de-materiais]
 data: 2026-09-15
 autores: M Weck
 ano: 2026

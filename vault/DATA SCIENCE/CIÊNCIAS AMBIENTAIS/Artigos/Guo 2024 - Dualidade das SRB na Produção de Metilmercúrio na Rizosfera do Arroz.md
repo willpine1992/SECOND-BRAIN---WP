@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/srb-mercurio-organico, processo/metilacao, matriz/rizosfera, matriz/solo, sergio-duvoisin-junior]
+tags: [busca/srb-mercurio-organico, processo/metilacao, matriz/rizosfera, matriz/solo, sergio-duvoisin-junior]
 data: 2026-09-16
 autores: P. Guo, H. Du, Q. Mao, Y. Deng, X. Wang, J. Li et al.
 ano: 2024

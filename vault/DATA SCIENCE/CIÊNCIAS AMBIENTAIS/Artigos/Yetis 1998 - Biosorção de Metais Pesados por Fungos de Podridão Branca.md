@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/fungos-metais-pesados-biosorcao, processo/biosorcao, matriz/fungos-podridao-branca, patricia-melchina]
+tags: [busca/fungos-metais-pesados-biosorcao, processo/biosorcao, matriz/fungos-podridao-branca, patricia-melchina]
 data: 2026-09-16
 autores: İ. Yetis, G. Özcengiz, F.B. Dilek, N. Ergen, A. Erbay
 ano: 1998

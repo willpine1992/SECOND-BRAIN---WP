@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/atomic-simulation-environment, tema/simulacao-molecular, aplicacao/ciencia-de-materiais]
+tags: [biblioteca/atomic-simulation-environment, tema/simulacao-molecular, aplicacao/ciencia-de-materiais]
 data: 2026-09-15
 autores: Y Li, X Zhang, X Jin, B Smit
 ano: 2026

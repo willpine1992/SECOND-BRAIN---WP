@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/deepchem, tema/predicao-de-propriedades, aplicacao/descoberta-de-farmacos]
+tags: [biblioteca/deepchem, tema/predicao-de-propriedades, aplicacao/descoberta-de-farmacos]
 data: 2026-09-15
 autores: PK Pradhan
 ano: 2026

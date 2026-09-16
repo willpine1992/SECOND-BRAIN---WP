@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, tema/triagem-virtual, aplicacao/descoberta-de-farmacos]
+tags: [biblioteca/rdkit, tema/triagem-virtual, aplicacao/descoberta-de-farmacos]
 data: 2026-09-15
 autores: D Cecchini, AK Nigam, M Tang, J Reis, M Koop et al.
 ano: 2026

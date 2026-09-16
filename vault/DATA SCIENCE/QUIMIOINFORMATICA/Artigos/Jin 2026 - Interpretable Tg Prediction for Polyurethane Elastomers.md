@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, tema/predicao-de-propriedades, tema/materiais-polimericos, aplicacao/ciencia-de-materiais]
+tags: [biblioteca/rdkit, tema/predicao-de-propriedades, tema/materiais-polimericos, aplicacao/ciencia-de-materiais]
 data: 2026-09-15
 autores: L Jin, Z Wei, Z Zhuang, J Shang, S Sun, D Xue, D Fu et al.
 ano: 2026

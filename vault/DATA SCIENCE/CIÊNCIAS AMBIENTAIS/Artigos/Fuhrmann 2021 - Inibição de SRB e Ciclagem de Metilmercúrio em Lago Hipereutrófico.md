@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/srb-mercurio-organico, processo/metilacao, matriz/sedimento-lacustre, sergio-duvoisin-junior]
+tags: [busca/srb-mercurio-organico, processo/metilacao, matriz/sedimento-lacustre, sergio-duvoisin-junior]
 data: 2026-09-16
 autores: B.C. Fuhrmann, M.W. Beutel, P.A. O'Day, C. Tran et al.
 ano: 2021

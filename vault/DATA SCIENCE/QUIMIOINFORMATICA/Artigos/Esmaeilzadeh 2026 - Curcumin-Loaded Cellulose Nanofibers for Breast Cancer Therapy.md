@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/atomic-simulation-environment, tema/simulacao-molecular, aplicacao/descoberta-de-farmacos]
+tags: [biblioteca/atomic-simulation-environment, tema/simulacao-molecular, aplicacao/descoberta-de-farmacos]
 data: 2026-09-15
 autores: A Esmaeilzadeh, M Azimzadeh Irani, S Asadi et al.
 ano: 2026

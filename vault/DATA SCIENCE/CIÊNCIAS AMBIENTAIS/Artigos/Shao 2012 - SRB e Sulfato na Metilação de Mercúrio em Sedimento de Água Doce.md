@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/srb-mercurio-organico, processo/metilacao, matriz/sedimento-de-agua-doce, sergio-duvoisin-junior]
+tags: [busca/srb-mercurio-organico, processo/metilacao, matriz/sedimento-de-agua-doce, sergio-duvoisin-junior]
 data: 2026-09-16
 autores: D. Shao, Y. Kang, S. Wu, M.H. Wong
 ano: 2012

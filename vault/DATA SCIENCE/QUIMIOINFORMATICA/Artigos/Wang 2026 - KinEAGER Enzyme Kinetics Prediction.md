@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, tema/predicao-de-propriedades, aplicacao/quimica-computacional-geral]
+tags: [biblioteca/rdkit, tema/predicao-de-propriedades, aplicacao/quimica-computacional-geral]
 data: 2026-09-15
 autores: X Wang, W Li, S Ding, Y Deng, H Zhang, HY Li, Y Li
 ano: 2026

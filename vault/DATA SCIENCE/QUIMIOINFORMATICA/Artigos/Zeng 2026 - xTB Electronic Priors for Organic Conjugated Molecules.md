@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, tema/predicao-de-propriedades, aplicacao/quimica-computacional-geral]
+tags: [biblioteca/rdkit, tema/predicao-de-propriedades, aplicacao/quimica-computacional-geral]
 data: 2026-09-15
 autores: M Zeng, L Huai, T Liu, Y Liu, X Jiang
 ano: 2026

@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/fungos-metais-pesados-biosorcao, processo/biosorcao, matriz/sistema-simbiotico, patricia-melchina]
+tags: [busca/fungos-metais-pesados-biosorcao, processo/biosorcao, matriz/sistema-simbiotico, patricia-melchina]
 data: 2026-09-16
 autores: J. Wang, R. Chen, L. Fan, L. Cui, Y. Zhang
 ano: 2021

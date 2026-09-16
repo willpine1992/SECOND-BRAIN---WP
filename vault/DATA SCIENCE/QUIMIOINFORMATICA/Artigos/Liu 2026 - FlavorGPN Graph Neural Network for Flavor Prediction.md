@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, tema/predicao-de-propriedades, aplicacao/ciencia-de-alimentos]
+tags: [biblioteca/rdkit, tema/predicao-de-propriedades, aplicacao/ciencia-de-alimentos]
 data: 2026-09-15
 autores: J Liu, X Shu, S Ren, S Wan, X Pan
 ano: 2026

@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, tema/predicao-de-propriedades, aplicacao/ciencia-de-materiais]
+tags: [biblioteca/rdkit, tema/predicao-de-propriedades, aplicacao/ciencia-de-materiais]
 data: 2026-09-15
 autores: A Alemayoh, Z Pan, N Wang
 ano: 2026

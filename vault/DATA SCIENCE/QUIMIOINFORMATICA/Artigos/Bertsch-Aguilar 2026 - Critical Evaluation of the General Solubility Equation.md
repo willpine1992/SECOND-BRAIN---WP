@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, biblioteca/openbabel, tema/predicao-de-propriedades, aplicacao/quimica-computacional-geral]
+tags: [biblioteca/rdkit, biblioteca/openbabel, tema/predicao-de-propriedades, aplicacao/quimica-computacional-geral]
 data: 2026-09-15
 autores: E Bertsch-Aguilar, N Quirós, F Schosinsky, S Pinheiro et al.
 ano: 2026

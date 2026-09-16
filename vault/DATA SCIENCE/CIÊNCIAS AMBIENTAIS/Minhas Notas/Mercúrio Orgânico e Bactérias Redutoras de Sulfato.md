@@ -1,5 +1,5 @@
 ---
-tags: [índice, fila-leitura, sergio-duvoisin-junior]
+tags: [índice, sergio-duvoisin-junior]
 data: 2026-09-16
 ---
 

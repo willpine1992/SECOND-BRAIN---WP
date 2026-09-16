@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, busca/fungos-metais-pesados-biosorcao, processo/biosorcao, matriz/solo, patricia-melchina]
+tags: [busca/fungos-metais-pesados-biosorcao, processo/biosorcao, matriz/solo, patricia-melchina]
 data: 2026-09-16
 autores: O.A. Oyewole, S.S.L.T. Zobeashia, E.O. Oladoja, R.O. Raji
 ano: 2019

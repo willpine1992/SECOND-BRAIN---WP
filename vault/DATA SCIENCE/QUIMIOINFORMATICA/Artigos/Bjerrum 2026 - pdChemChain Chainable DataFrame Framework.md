@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, tema/curadoria-de-dados-quimicos, aplicacao/bancos-de-dados-quimicos]
+tags: [biblioteca/rdkit, tema/curadoria-de-dados-quimicos, aplicacao/bancos-de-dados-quimicos]
 data: 2026-09-15
 autores: EJ Bjerrum
 ano: 2026

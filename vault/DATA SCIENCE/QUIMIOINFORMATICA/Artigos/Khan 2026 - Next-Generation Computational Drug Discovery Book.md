@@ -1,5 +1,5 @@
 ---
-tags: [literatura, fila-leitura, biblioteca/rdkit, tema/docking, aplicacao/descoberta-de-farmacos]
+tags: [biblioteca/rdkit, tema/docking, aplicacao/descoberta-de-farmacos]
 data: 2026-09-15
 autores: MKA Khan, M Tarique
 ano: 2026

@@ -1,5 +1,5 @@
 ---
-tags: [literatura]
+tags: []
 data: {{date}}
 autores: 
 ano: 
