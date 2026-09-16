@@ -6,7 +6,55 @@ const el = (id) => document.getElementById(id);
 // Graph settings (persisted per-browser; not vault content)
 // ---------------------------------------------------------------------
 const GRAPH_SETTINGS_KEY = "sb-graph-settings";
-const GRAPH_SETTINGS_DEFAULTS = { fontSize: 5, nodeScale: 1, linkIntensity: 0.45, theme: "", tags: [] };
+const GRAPH_SETTINGS_DEFAULTS = { fontSize: 5, nodeScale: 1, linkIntensity: 0.45, theme: "", tags: [], solarMode: false };
+
+// Etiquetas usadas como "sóis" na visão Sistema Solar — cada uma vira um
+// centro brilhante e as notas que carregam essa tag orbitam ao redor dela.
+const SOLAR_TAGS = [
+  "aplicacao/bancos-de-dados-quimicos",
+  "aplicacao/catalise",
+  "aplicacao/ciencia-de-alimentos",
+  "aplicacao/ciencia-de-materiais",
+  "aplicacao/descoberta-de-farmacos",
+  "aplicacao/quimica-ambiental",
+  "aplicacao/quimica-analitica",
+  "aplicacao/quimica-computacional-geral",
+  "biblioteca/atomic-simulation-environment",
+  "biblioteca/deepchem",
+  "biblioteca/mdanalysis",
+  "biblioteca/mordred",
+  "biblioteca/openbabel",
+  "biblioteca/padel-descriptor",
+  "biblioteca/pyscf",
+  "biblioteca/rdkit",
+  "biblioteca/torchdrug",
+  "bioadsorcao",
+  "diario",
+  "estatistica",
+  "estrategia",
+  "fila-leitura",
+  "indice",
+  "literatura",
+  "meta",
+  "permanente",
+  "projeto",
+  "quimiometria",
+  "sessao",
+  "tema/computacao-quantica",
+  "tema/curadoria-de-dados-quimicos",
+  "tema/docking",
+  "tema/geracao-de-moleculas",
+  "tema/interpretabilidade-xai",
+  "tema/materiais-polimericos",
+  "tema/planejamento-de-sintese",
+  "tema/predicao-de-propriedades",
+  "tema/quimica-computacional-geral",
+  "tema/simulacao-molecular",
+  "tema/triagem-virtual",
+  "tema/visualizacao-de-espaco-quimico",
+  "tutorial",
+  "índice",
+];
 
 function loadGraphSettings() {
   try {
@@ -17,6 +65,7 @@ function loadGraphSettings() {
       linkIntensity: typeof saved.linkIntensity === "number" ? saved.linkIntensity : GRAPH_SETTINGS_DEFAULTS.linkIntensity,
       theme: typeof saved.theme === "string" ? saved.theme : GRAPH_SETTINGS_DEFAULTS.theme,
       tags: Array.isArray(saved.tags) ? saved.tags : [],
+      solarMode: typeof saved.solarMode === "boolean" ? saved.solarMode : GRAPH_SETTINGS_DEFAULTS.solarMode,
     };
   } catch {
     return { ...GRAPH_SETTINGS_DEFAULTS, tags: [] };
@@ -314,6 +363,7 @@ async function openNote(path) {
   el("graphView").classList.add("hidden");
   el("graphSettingsBtn").classList.add("hidden");
   el("graphSettingsPanel").classList.add("hidden");
+  el("solarToggleBtn").classList.add("hidden");
   el("editorView").classList.remove("hidden");
   el("notePath").textContent = path;
   el("editorTextarea").value = data.content;
@@ -635,7 +685,7 @@ function renderGraphTagFilter() {
       else state.graphSettings.tags.splice(idx, 1);
       saveGraphSettings();
       renderGraphTagFilter();
-      renderGraph();
+      renderActiveGraph();
     });
     box.appendChild(pill);
   }
@@ -835,13 +885,174 @@ function renderGraph() {
   stopObserver.observe(graphViewEl, { attributes: true, attributeFilter: ["class"] });
 }
 
+// ---------------------------------------------------------------------
+// Solar system view — etiquetas viram "sóis" e as notas que carregam
+// aquela etiqueta orbitam ao redor dela como planetas.
+// ---------------------------------------------------------------------
+function sunLabel(tag) {
+  return tag.split("/").pop().replace(/-/g, " ");
+}
+
+function renderSolarSystem() {
+  applyGraphCssVars();
+  const svg = d3.select("#graphSvg");
+  svg.selectAll("*").remove();
+  const wrap = document.getElementById("graphView");
+  const width = wrap.clientWidth || 800;
+  const height = wrap.clientHeight || 600;
+  svg.attr("viewBox", [0, 0, width, height]);
+
+  const scale = state.graphSettings.nodeScale;
+
+  const sunNodes = SOLAR_TAGS.map((tag) => ({ id: "sun:" + tag, tag, isSun: true, degree: 0 }));
+  const sunById = new Map(sunNodes.map((s) => [s.id, s]));
+
+  const planetNodes = [];
+  const links = [];
+  for (const [path, note] of Object.entries(state.index)) {
+    if (!noteMatchesGraphFilters(note)) continue;
+    const matchingTags = note.tags.filter((t) => sunById.has("sun:" + t));
+    if (matchingTags.length === 0) continue;
+    planetNodes.push({ id: path, title: note.title, folder: note.folder, isSun: false, degree: matchingTags.length });
+    for (const t of matchingTags) {
+      links.push({ source: "sun:" + t, target: path });
+      sunById.get("sun:" + t).degree += 1;
+    }
+  }
+
+  if (planetNodes.length === 0) {
+    svg
+      .append("text")
+      .attr("x", width / 2)
+      .attr("y", height / 2)
+      .attr("text-anchor", "middle")
+      .attr("fill", "var(--text-dim)")
+      .attr("font-size", 13)
+      .text("Nenhuma nota com essas etiquetas (ou os filtros escondem todas).");
+    return;
+  }
+
+  const nodes = [...sunNodes, ...planetNodes];
+  const maxSunDegree = Math.max(1, ...sunNodes.map((n) => n.degree));
+  const sunRadiusScale = d3.scaleSqrt().domain([0, maxSunDegree]).range([9 * scale, 26 * scale]).clamp(true);
+  const maxPlanetDegree = Math.max(1, ...planetNodes.map((n) => n.degree));
+  const planetRadiusScale = d3.scaleSqrt().domain([1, maxPlanetDegree]).range([3.5 * scale, 9 * scale]).clamp(true);
+  const radiusOf = (d) => (d.isSun ? sunRadiusScale(d.degree) : planetRadiusScale(d.degree));
+
+  const g = svg.append("g");
+  svg.call(
+    d3.zoom().scaleExtent([0.2, 4]).on("zoom", (event) => g.attr("transform", event.transform))
+  );
+
+  const AMBIENT_ALPHA = 0.05;
+  const simulation = d3
+    .forceSimulation(nodes)
+    .alphaDecay(0.02)
+    .alphaTarget(AMBIENT_ALPHA)
+    .velocityDecay(0.35)
+    .force(
+      "link",
+      d3
+        .forceLink(links)
+        .id((d) => d.id)
+        .distance((d) => radiusOf(d.source) + radiusOf(d.target) + 26)
+        .strength(0.5)
+    )
+    .force("charge", d3.forceManyBody().strength((d) => (d.isSun ? -320 : -40)))
+    .force("center", d3.forceCenter(width / 2, height / 2))
+    .force("collide", d3.forceCollide((d) => radiusOf(d) + (d.isSun ? 20 : 10)))
+    .force("jiggle", forceJiggle(0.35));
+
+  const link = g.append("g").selectAll("line").data(links).join("line").attr("class", "graph-link orbit");
+
+  const node = g
+    .append("g")
+    .selectAll("g")
+    .data(nodes)
+    .join("g")
+    .attr("class", (d) => "graph-node" + (d.isSun ? " sun" : ""))
+    .call(
+      d3
+        .drag()
+        .on("start", (event, d) => {
+          if (!event.active) simulation.alphaTarget(0.3).restart();
+          d.fx = d.x;
+          d.fy = d.y;
+        })
+        .on("drag", (event, d) => {
+          d.fx = event.x;
+          d.fy = event.y;
+        })
+        .on("end", (event, d) => {
+          if (!event.active) simulation.alphaTarget(AMBIENT_ALPHA);
+          d.fx = null;
+          d.fy = null;
+        })
+    )
+    .on("click", (event, d) => {
+      if (!d.isSun) openNote(d.id);
+    });
+
+  node.append("circle").attr("r", radiusOf).attr("fill", (d) => (d.isSun ? null : folderColor(d.folder)));
+  node.append("title").text((d) => (d.isSun ? `${d.tag} (${d.degree} nota${d.degree === 1 ? "" : "s"})` : d.title));
+
+  const label = node.append("text").attr("dy", (d) => radiusOf(d) + 8);
+  label.each(function (d) {
+    const text = d3.select(this);
+    const lines = d.isSun ? wrapLabel(sunLabel(d.tag), 13) : wrapLabel(d.title, 16);
+    lines.forEach((line, i) => {
+      text
+        .append("tspan")
+        .attr("x", 0)
+        .attr("dy", i === 0 ? 0 : "1.05em")
+        .text(line);
+    });
+  });
+
+  simulation.on("tick", () => {
+    link
+      .attr("x1", (d) => d.source.x)
+      .attr("y1", (d) => d.source.y)
+      .attr("x2", (d) => d.target.x)
+      .attr("y2", (d) => d.target.y);
+    node.attr("transform", (d) => `translate(${d.x},${d.y})`);
+  });
+
+  const graphViewEl = document.getElementById("graphView");
+  const stopObserver = new MutationObserver(() => {
+    if (graphViewEl.classList.contains("hidden")) {
+      simulation.stop();
+      stopObserver.disconnect();
+    }
+  });
+  stopObserver.observe(graphViewEl, { attributes: true, attributeFilter: ["class"] });
+}
+
+function renderActiveGraph() {
+  if (state.graphSettings.solarMode) renderSolarSystem();
+  else renderGraph();
+}
+
+function updateSolarToggleUI() {
+  el("solarToggleBtn").classList.toggle("active", state.graphSettings.solarMode);
+}
+
 el("graphBtn").addEventListener("click", () => {
   el("emptyState").classList.add("hidden");
   el("editorView").classList.add("hidden");
   el("graphView").classList.remove("hidden");
   el("graphSettingsBtn").classList.remove("hidden");
+  el("solarToggleBtn").classList.remove("hidden");
   populateGraphSettingsUI();
-  renderGraph();
+  updateSolarToggleUI();
+  renderActiveGraph();
+});
+
+el("solarToggleBtn").addEventListener("click", () => {
+  state.graphSettings.solarMode = !state.graphSettings.solarMode;
+  saveGraphSettings();
+  updateSolarToggleUI();
+  renderActiveGraph();
 });
 
 el("graphSettingsBtn").addEventListener("click", () => {
@@ -868,20 +1079,21 @@ el("gsNodeSize").addEventListener("input", (e) => {
   el("gsNodeSizeVal").textContent = state.graphSettings.nodeScale.toFixed(1) + "×";
   saveGraphSettings();
   clearTimeout(nodeSizeDebounce);
-  nodeSizeDebounce = setTimeout(renderGraph, 120);
+  nodeSizeDebounce = setTimeout(renderActiveGraph, 120);
 });
 
 el("gsThemeFilter").addEventListener("change", (e) => {
   state.graphSettings.theme = e.target.value;
   saveGraphSettings();
-  renderGraph();
+  renderActiveGraph();
 });
 
 el("gsReset").addEventListener("click", () => {
   state.graphSettings = { ...GRAPH_SETTINGS_DEFAULTS, tags: [] };
   saveGraphSettings();
   populateGraphSettingsUI();
-  renderGraph();
+  updateSolarToggleUI();
+  renderActiveGraph();
 });
 
 // ---------------------------------------------------------------------
