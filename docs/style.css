@@ -67,7 +67,7 @@ html[data-theme="dark"] {
   font-size: 11px;
   padding: 4px 14px;
   text-align: center;
-  border-bottom: 1px solid var(--border);
+  border-top: 1px solid var(--border);
   flex-shrink: 0;
 }
 #brandBar a { color: var(--text-dim); text-decoration: underline; }
@@ -95,9 +95,10 @@ body {
   flex-shrink: 0;
 }
 .brand { font-weight: 600; letter-spacing: 0.2px; white-space: nowrap; }
-.searchbox { flex: 1; max-width: 480px; }
+.searchbox { flex: 1; max-width: 480px; display: flex; gap: 6px; }
 .searchbox input {
-  width: 100%;
+  flex: 1;
+  min-width: 0;
   padding: 7px 10px;
   border-radius: 8px;
   border: 1px solid var(--border);
@@ -105,6 +106,11 @@ body {
   color: var(--text);
   font-size: 13px;
 }
+.searchbox .icon-btn {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.searchbox .icon-btn:hover { border-color: var(--accent); }
 .topbar-actions { display: flex; gap: 8px; margin-left: auto; align-items: center; }
 
 .btn {
@@ -143,13 +149,12 @@ a.btn { display: inline-block; text-decoration: none; }
   border-left: 1px solid var(--border);
 }
 
-/* Notas/Tags: popup flutuante (aberto pelo ícone de arquivo), não mais uma
-   coluna fixa — essa posição/estilo agora é ocupada pelo painel de
-   configurações do grafo (.graph-settings), veja abaixo. */
+/* Notas/Tags: popup flutuante (aberto pelo ícone de arquivo), não uma
+   coluna fixa. */
 #sidebar {
   position: absolute;
   top: 14px;
-  left: 14px;
+  right: 14px;
   width: 270px;
   max-height: calc(100% - 28px);
   overflow-y: auto;
@@ -291,8 +296,8 @@ a.btn { display: inline-block; text-decoration: none; }
 .meta-box a:hover { text-decoration: underline; }
 .meta-box .broken-link { color: var(--danger); }
 
-#graphView { flex: 1; min-height: 0; position: relative; display: flex; }
-#graphSvg { flex: 1; min-width: 0; height: 100%; display: block; background: var(--bg); }
+#graphView { flex: 1; min-height: 0; position: relative; }
+#graphSvg { width: 100%; height: 100%; display: block; background: var(--bg); }
 .graph-node circle { stroke: var(--bg); stroke-width: 1.5px; cursor: pointer; }
 .graph-node text { font-size: var(--graph-font-size, 6px); fill: var(--text-dim); pointer-events: none; text-anchor: middle; }
 .graph-link { stroke: var(--border); stroke-width: var(--graph-link-width, 1px); stroke-opacity: var(--graph-link-opacity, 0.45); }
@@ -309,16 +314,20 @@ a.btn { display: inline-block; text-decoration: none; }
   cursor: pointer;
 }
 
-/* Configurações do grafo: agora a coluna fixa do lado esquerdo (no lugar que
-   era do Notas/Tags) em vez de um popup flutuante — veja #sidebar acima. */
 .graph-settings {
+  position: absolute;
+  top: 14px;
+  right: 14px;
   width: 270px;
-  flex-shrink: 0;
+  max-height: calc(100% - 28px);
   overflow-y: auto;
-  background: var(--bg-sidebar);
-  border-right: 1px solid var(--border);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 10px;
   padding: 12px 14px 14px;
+  box-shadow: var(--shadow);
   font-size: 12px;
+  z-index: 10;
 }
 .graph-settings-title {
   font-size: 11px;
@@ -443,8 +452,7 @@ a.btn { display: inline-block; text-decoration: none; }
 
 @media (max-width: 860px) {
   #rightPanel { position: absolute; top: 0; bottom: 0; right: 0; z-index: 20; box-shadow: var(--shadow); display: none; }
-  #sidebar { top: 0; bottom: 0; left: 0; max-height: none; border-radius: 0; }
-  .graph-settings { position: absolute; top: 0; bottom: 0; left: 0; z-index: 12; box-shadow: var(--shadow); }
+  #sidebar, .graph-settings { top: 0; bottom: 0; right: 0; max-height: none; border-radius: 0; }
   .searchbox { max-width: 140px; }
   .brand { display: none; }
 }

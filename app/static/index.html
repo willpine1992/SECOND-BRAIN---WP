@@ -16,13 +16,12 @@
     <div class="brand">🧠 Second Brain</div>
     <div class="searchbox">
       <input id="searchInput" type="text" placeholder="Buscar notas, tags, conteúdo..." />
+      <button id="searchBtn" class="icon-btn" title="Buscar">🔍</button>
     </div>
     <div class="topbar-actions">
       <button id="newNoteBtn" class="btn">+ Nota</button>
       <button id="dailyNoteBtn" class="btn">Diário de hoje</button>
       <button id="graphBtn" class="btn">Grafo</button>
-      <button id="solarToggleBtn" class="btn hidden" title="Mostrar/esconder as etiquetas como sóis conectados às notas">🏷️ Etiquetas</button>
-      <button id="minhasNotasToggleBtn" class="btn hidden" title="Mostrar/esconder notas de 'Minhas Notas' no grafo">Notas</button>
       <button id="graphSettingsBtn" class="icon-btn hidden" title="Configurações do grafo">⚙</button>
       <button id="themeBtn" class="icon-btn" title="Alternar tema">◐</button>
     </div>
@@ -69,6 +68,7 @@
           <div class="gs-tabs">
             <button id="gsTabForca" class="gs-tab active" data-tab="forca">Força</button>
             <button id="gsTabTela" class="gs-tab" data-tab="tela">Tela</button>
+            <button id="gsTabFiltros" class="gs-tab" data-tab="filtros">Filtros</button>
             <button id="gsTabGrupos" class="gs-tab" data-tab="grupos">Grupos</button>
           </div>
 
@@ -101,14 +101,18 @@
 
             <label class="gs-label">Grossura dos links <span id="gsLinkIntensityVal"></span></label>
             <input id="gsLinkIntensity" type="range" min="0.05" max="1" step="0.05" />
+          </div>
 
+          <div id="gsPanelFiltros" class="gs-panel hidden">
             <label class="gs-label">Tema</label>
             <select id="gsThemeFilter">
               <option value="">Todos os temas</option>
             </select>
 
-            <label class="gs-label">Etiquetas</label>
+            <label class="gs-label">Etiquetas <button id="gsSolarModeToggle" class="btn small"></button></label>
             <div id="gsTagFilter" class="gs-tag-filter"></div>
+
+            <label class="gs-label">Notas de "Minhas Notas" <button id="gsMinhasNotasToggle" class="btn small"></button></label>
           </div>
 
           <div id="gsPanelGrupos" class="gs-panel hidden">
@@ -122,9 +126,6 @@
                 <button id="groupAdd" class="btn">+ Adicionar grupo</button>
               </div>
             </div>
-
-            <div class="graph-settings-subtitle" style="margin-top:14px;">Etiquetas visíveis como sóis</div>
-            <div id="solarTagToggles" class="gs-tag-filter"></div>
           </div>
 
           <button id="gsReset" class="btn" style="margin-top:12px;">Restaurar padrão</button>

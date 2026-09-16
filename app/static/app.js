@@ -20,7 +20,6 @@ const GRAPH_SETTINGS_DEFAULTS = {
   labelVisibilityThreshold: 0,
   movementIntensity: 0,
   groups: [],
-  solarTagsDisabled: [],
   showMinhasNotas: true,
   groupsSeeded: false,
   collabGroupsSeeded: false,
@@ -184,13 +183,12 @@ function loadGraphSettings() {
       labelVisibilityThreshold: num(saved.labelVisibilityThreshold, GRAPH_SETTINGS_DEFAULTS.labelVisibilityThreshold),
       movementIntensity: num(saved.movementIntensity, GRAPH_SETTINGS_DEFAULTS.movementIntensity),
       groups,
-      solarTagsDisabled: Array.isArray(saved.solarTagsDisabled) ? saved.solarTagsDisabled : [],
       showMinhasNotas: typeof saved.showMinhasNotas === "boolean" ? saved.showMinhasNotas : GRAPH_SETTINGS_DEFAULTS.showMinhasNotas,
       groupsSeeded: typeof saved.groupsSeeded === "boolean" ? saved.groupsSeeded : GRAPH_SETTINGS_DEFAULTS.groupsSeeded,
       collabGroupsSeeded: typeof saved.collabGroupsSeeded === "boolean" ? saved.collabGroupsSeeded : GRAPH_SETTINGS_DEFAULTS.collabGroupsSeeded,
     };
   } catch {
-    return { ...GRAPH_SETTINGS_DEFAULTS, tags: [], groups: [], solarTagsDisabled: [] };
+    return { ...GRAPH_SETTINGS_DEFAULTS, tags: [], groups: [] };
   }
 }
 
@@ -383,6 +381,10 @@ async function runSearch() {
     refreshTreeView();
     return;
   }
+  // Os resultados são renderizados dentro do painel Notas/Tags — como ele
+  // agora é um popup fechado por padrão, sem isso a busca "não faz nada"
+  // visivelmente mesmo funcionando.
+  el("sidebar").classList.remove("collapsed");
   const data = await searchNotes(q, state.activeTag);
   const container = el("tree");
   container.innerHTML = "";
@@ -485,8 +487,6 @@ async function openNote(path) {
   el("graphView").classList.add("hidden");
   el("graphSettingsBtn").classList.add("hidden");
   el("graphSettingsPanel").classList.add("hidden");
-  el("solarToggleBtn").classList.add("hidden");
-  el("minhasNotasToggleBtn").classList.add("hidden");
   el("editorView").classList.remove("hidden");
   el("notePath").textContent = path;
   el("editorTextarea").value = data.content;
@@ -634,6 +634,16 @@ let searchDebounce;
 el("searchInput").addEventListener("input", () => {
   clearTimeout(searchDebounce);
   searchDebounce = setTimeout(runSearch, 200);
+});
+el("searchInput").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    clearTimeout(searchDebounce);
+    runSearch();
+  }
+});
+el("searchBtn").addEventListener("click", () => {
+  clearTimeout(searchDebounce);
+  runSearch();
 });
 
 // ---------------------------------------------------------------------
@@ -856,15 +866,16 @@ function populateGraphSettingsUI() {
   renderGraphThemeFilter();
   renderGraphTagFilter();
   renderGroupsList();
-  renderSolarTagToggles();
+  updateSolarToggleUI();
   updateMinhasNotasToggleUI();
   applyGraphCssVars();
 }
 
 function updateMinhasNotasToggleUI() {
-  const btn = el("minhasNotasToggleBtn");
+  const btn = el("gsMinhasNotasToggle");
   const on = state.graphSettings.showMinhasNotas;
   btn.classList.toggle("active", on);
+  btn.textContent = on ? "Ativado" : "Desativado";
 }
 
 // Groups notes by their specific "tema" folder (e.g. "DATA SCIENCE/CATÁLISE")
@@ -997,36 +1008,13 @@ el("groupAdd").addEventListener("click", () => {
 });
 
 // ---------------------------------------------------------------------
-// Per-tag on/off toggles for which suns appear in the Solar System view
-// ---------------------------------------------------------------------
-function renderSolarTagToggles() {
-  const box = el("solarTagToggles");
-  box.innerHTML = "";
-  for (const tag of SOLAR_TAGS) {
-    const pill = document.createElement("span");
-    const disabled = state.graphSettings.solarTagsDisabled.includes(tag);
-    pill.className = "tag-pill" + (disabled ? "" : " active");
-    pill.textContent = tag;
-    pill.title = disabled ? "Desativada — clique para ativar" : "Ativa — clique para desativar";
-    pill.addEventListener("click", () => {
-      const idx = state.graphSettings.solarTagsDisabled.indexOf(tag);
-      if (idx === -1) state.graphSettings.solarTagsDisabled.push(tag);
-      else state.graphSettings.solarTagsDisabled.splice(idx, 1);
-      saveGraphSettings();
-      renderSolarTagToggles();
-      renderActiveGraph();
-    });
-    box.appendChild(pill);
-  }
-}
-
-// ---------------------------------------------------------------------
 // Settings panel tabs
 // ---------------------------------------------------------------------
 function switchSettingsTab(tab) {
   for (const [id, key] of [
     ["gsTabForca", "forca"],
     ["gsTabTela", "tela"],
+    ["gsTabFiltros", "filtros"],
     ["gsTabGrupos", "grupos"],
   ]) {
     el(id).classList.toggle("active", tab === key);
@@ -1034,6 +1022,7 @@ function switchSettingsTab(tab) {
   for (const [id, key] of [
     ["gsPanelForca", "forca"],
     ["gsPanelTela", "tela"],
+    ["gsPanelFiltros", "filtros"],
     ["gsPanelGrupos", "grupos"],
   ]) {
     el(id).classList.toggle("hidden", tab !== key);
@@ -1041,6 +1030,7 @@ function switchSettingsTab(tab) {
 }
 el("gsTabForca").addEventListener("click", () => switchSettingsTab("forca"));
 el("gsTabTela").addEventListener("click", () => switchSettingsTab("tela"));
+el("gsTabFiltros").addEventListener("click", () => switchSettingsTab("filtros"));
 el("gsTabGrupos").addEventListener("click", () => switchSettingsTab("grupos"));
 
 // Splits a title into up to 3 short lines (word-wrapped), ellipsizing
@@ -1097,11 +1087,7 @@ function renderGraph() {
   applyGraphCssVars();
   const svg = d3.select("#graphSvg");
   svg.selectAll("*").remove();
-  // Mede o próprio <svg>, não o #graphView — desde que o painel de
-  // configurações passou a ser uma coluna fixa dentro de #graphView (em vez
-  // de um overlay absoluto), o wrapper inteiro não reflete mais a largura
-  // real disponível para o grafo.
-  const wrap = document.getElementById("graphSvg");
+  const wrap = document.getElementById("graphView");
   const width = wrap.clientWidth || 800;
   const height = wrap.clientHeight || 600;
   svg.attr("viewBox", [0, 0, width, height]);
@@ -1165,7 +1151,12 @@ function renderGraph() {
   // carries that tag.
   const sunNodes = [];
   if (state.graphSettings.solarMode) {
-    const activeSolarTags = SOLAR_TAGS.filter((t) => !state.graphSettings.solarTagsDisabled.includes(t));
+    // Reaproveita o filtro unificado de Etiquetas: se houver tags selecionadas,
+    // só essas (das que fazem parte de SOLAR_TAGS) viram sóis; sem seleção,
+    // todas as SOLAR_TAGS aparecem — mesmo padrão "vazio = mostra tudo".
+    const activeSolarTags = state.graphSettings.tags.length
+      ? SOLAR_TAGS.filter((t) => state.graphSettings.tags.includes(t))
+      : SOLAR_TAGS;
     for (const tag of activeSolarTags) {
       sunNodes.push({ id: "sun:" + tag, tag, isSun: true, isHub: false, degree: 0 });
     }
@@ -1361,7 +1352,10 @@ function renderActiveGraph() {
 }
 
 function updateSolarToggleUI() {
-  el("solarToggleBtn").classList.toggle("active", state.graphSettings.solarMode);
+  const btn = el("gsSolarModeToggle");
+  const on = state.graphSettings.solarMode;
+  btn.classList.toggle("active", on);
+  btn.textContent = on ? "Ativado" : "Desativado";
 }
 
 function showGraphView() {
@@ -1369,17 +1363,13 @@ function showGraphView() {
   el("editorView").classList.add("hidden");
   el("graphView").classList.remove("hidden");
   el("graphSettingsBtn").classList.remove("hidden");
-  el("solarToggleBtn").classList.remove("hidden");
-  el("minhasNotasToggleBtn").classList.remove("hidden");
   populateGraphSettingsUI();
-  updateSolarToggleUI();
-  updateMinhasNotasToggleUI();
   renderActiveGraph();
 }
 
 el("graphBtn").addEventListener("click", showGraphView);
 
-el("solarToggleBtn").addEventListener("click", () => {
+el("gsSolarModeToggle").addEventListener("click", () => {
   state.graphSettings.solarMode = !state.graphSettings.solarMode;
   saveGraphSettings();
   updateSolarToggleUI();
@@ -1388,9 +1378,6 @@ el("solarToggleBtn").addEventListener("click", () => {
 
 el("graphSettingsBtn").addEventListener("click", () => {
   el("graphSettingsPanel").classList.toggle("hidden");
-  // O painel agora ocupa espaço em vez de flutuar por cima do svg, então o
-  // grafo precisa recalcular sua largura disponível e recentralizar.
-  requestAnimationFrame(() => renderActiveGraph());
 });
 
 el("gsFontSize").addEventListener("input", (e) => {
@@ -1462,7 +1449,7 @@ el("gsThemeFilter").addEventListener("change", (e) => {
   renderActiveGraph();
 });
 
-el("minhasNotasToggleBtn").addEventListener("click", () => {
+el("gsMinhasNotasToggle").addEventListener("click", () => {
   state.graphSettings.showMinhasNotas = !state.graphSettings.showMinhasNotas;
   saveGraphSettings();
   updateMinhasNotasToggleUI();
@@ -1470,7 +1457,7 @@ el("minhasNotasToggleBtn").addEventListener("click", () => {
 });
 
 el("gsReset").addEventListener("click", () => {
-  state.graphSettings = { ...GRAPH_SETTINGS_DEFAULTS, tags: [], groups: [], solarTagsDisabled: [] };
+  state.graphSettings = { ...GRAPH_SETTINGS_DEFAULTS, tags: [], groups: [] };
   saveGraphSettings();
   populateGraphSettingsUI();
   updateSolarToggleUI();
@@ -1491,7 +1478,6 @@ async function refreshAll() {
 // que a sessão anterior tivesse deixado algum filtro ativo.
 state.graphSettings.theme = "";
 state.graphSettings.tags = [];
-state.graphSettings.solarTagsDisabled = [];
 saveGraphSettings();
 seedDefaultGroups();
 seedCollaboratorGroups();
