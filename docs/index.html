@@ -23,7 +23,7 @@
   </div>
 
   <header id="topbar">
-    <button id="toggleSidebar" class="icon-btn" title="Alternar painel">☰</button>
+    <button id="toggleSidebar" class="icon-btn" title="Notas e Tags">📁</button>
     <div class="brand">🧠 Second Brain</div>
     <div class="searchbox">
       <input id="searchInput" type="text" placeholder="Buscar notas, tags, conteúdo..." />
@@ -31,6 +31,7 @@
     <div class="topbar-actions">
       <button id="graphBtn" class="btn">Grafo</button>
       <button id="solarToggleBtn" class="btn hidden" title="Mostrar/esconder as etiquetas como sóis conectados às notas">🏷️ Etiquetas</button>
+      <button id="minhasNotasToggleBtn" class="btn hidden" title="Mostrar/esconder notas de 'Minhas Notas' no grafo">Notas</button>
       <button id="graphSettingsBtn" class="icon-btn hidden" title="Configurações do grafo">⚙</button>
       <button id="themeBtn" class="icon-btn" title="Alternar tema">◐</button>
     </div>
@@ -115,8 +116,6 @@
 
             <label class="gs-label">Etiquetas</label>
             <div id="gsTagFilter" class="gs-tag-filter"></div>
-
-            <label class="gs-label">Notas de "Minhas Notas" <button id="gsMinhasNotasToggle" class="btn small"></button></label>
           </div>
 
           <div id="gsPanelGrupos" class="gs-panel hidden">
