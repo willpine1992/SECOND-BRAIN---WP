@@ -4,7 +4,7 @@ data: 2026-09-14
 status: ativo
 ---
 
-# Dashboard Vagem-Palma
+# NOTAS - Dashboard Vagem-Palma
 
 > [!info] Status
 > **Status:** ativo

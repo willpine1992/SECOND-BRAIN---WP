@@ -3,7 +3,7 @@ tags: [indice]
 data: 2026-09-14
 ---
 
-# Bioadsorção
+# NOTAS - Bioadsorção
 
 Nota-índice: tudo sobre bioadsorção de corantes/contaminantes usando biomassa vegetal — isotermas, cinética, tratamentos de superfície, e as análises computacionais em cima desses dados.
 

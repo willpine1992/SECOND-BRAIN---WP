@@ -3,7 +3,7 @@ tags: [índice, fila-leitura]
 data: 2026-09-15
 ---
 
-# Quimioinformática
+# NOTAS - Quimioinformática
 
 Índice dos artigos capturados automaticamente dos alertas do Google Scholar (Procedimento 0 da skill `pesquisador`), ainda não lidos. Cada entrada é uma nota-referência enxuta em `Artigos/` — quando um artigo for lido de verdade, a nota vira nota de literatura completa e o `status:` muda. Agrupado por biblioteca de origem do alerta; tema/aplicação prática ficam nas tags de cada nota.
 

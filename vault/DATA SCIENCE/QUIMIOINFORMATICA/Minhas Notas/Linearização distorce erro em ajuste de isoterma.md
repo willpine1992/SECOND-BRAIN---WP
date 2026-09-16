@@ -3,7 +3,7 @@ tags: [permanente, quimiometria, estatistica]
 data: 2026-09-14
 ---
 
-# Linearização distorce erro em ajuste de isoterma
+# NOTAS - Linearização distorce erro em ajuste de isoterma
 
 ## A ideia
 Linearizar um modelo não-linear pra poder usar regressão linear simples (ex. Ce/Qe vs. Ce na isoterma de Langmuir) não é neutro estatisticamente — a transformação distorce a estrutura do erro, porque o ruído experimental deixa de ser homogêneo depois de dividir/inverter variáveis. Um R² baixo no ajuste linearizado pode ser puramente artefato do método, não evidência de que o modelo não se aplica àquele sistema.

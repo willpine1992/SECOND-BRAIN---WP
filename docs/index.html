@@ -30,14 +30,14 @@
     </div>
     <div class="topbar-actions">
       <button id="graphBtn" class="btn">Grafo</button>
-      <button id="solarToggleBtn" class="btn hidden" title="Alternar visão Sistema Solar (etiquetas = sóis, artigos = planetas)">🌞 Sistema Solar</button>
+      <button id="solarToggleBtn" class="btn hidden" title="Mostrar/esconder as etiquetas como sóis conectados às notas">🏷️ Etiquetas</button>
       <button id="graphSettingsBtn" class="icon-btn hidden" title="Configurações do grafo">⚙</button>
       <button id="themeBtn" class="icon-btn" title="Alternar tema">◐</button>
     </div>
   </header>
 
   <div id="body">
-    <aside id="sidebar">
+    <aside id="sidebar" class="collapsed">
       <div class="sidebar-section">
         <div class="sidebar-title">Notas</div>
         <div id="tree" class="tree"></div>
@@ -115,6 +115,8 @@
 
             <label class="gs-label">Etiquetas</label>
             <div id="gsTagFilter" class="gs-tag-filter"></div>
+
+            <label class="gs-label">Notas de "Minhas Notas" <button id="gsMinhasNotasToggle" class="btn small"></button></label>
           </div>
 
           <div id="gsPanelGrupos" class="gs-panel hidden">
@@ -122,14 +124,14 @@
             <div id="groupsList" class="groups-list"></div>
             <div class="group-form">
               <input id="groupName" type="text" placeholder="Nome do grupo" />
-              <input id="groupKeyword" type="text" placeholder="Palavra-chave ou etiqueta" />
+              <input id="groupKeyword" type="text" placeholder="Palavra-chave(s), separadas por vírgula" />
               <div class="group-form-row">
                 <input id="groupColor" type="color" value="#4a6fa5" />
                 <button id="groupAdd" class="btn">+ Adicionar grupo</button>
               </div>
             </div>
 
-            <div class="graph-settings-subtitle" style="margin-top:14px;">Etiquetas do Sistema Solar</div>
+            <div class="graph-settings-subtitle" style="margin-top:14px;">Etiquetas visíveis como sóis</div>
             <div id="solarTagToggles" class="gs-tag-filter"></div>
           </div>
 

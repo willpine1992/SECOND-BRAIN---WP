@@ -21,10 +21,70 @@ const GRAPH_SETTINGS_DEFAULTS = {
   movementIntensity: 0,
   groups: [],
   solarTagsDisabled: [],
+  showMinhasNotas: true,
+  groupsSeeded: false,
 };
 
-// Etiquetas usadas como "sóis" na visão Sistema Solar — cada uma vira um
-// centro brilhante e as notas que carregam essa tag orbitam ao redor dela.
+// Grupos por palavra-chave para as bibliotecas/ferramentas de QUIMIOINFORMATICA
+// (correspondem aos alertas do Google Scholar) — semeados uma única vez no
+// primeiro carregamento de cada navegador (ver seedDefaultGroups), para que
+// apareçam mesmo sem depender de nenhuma escrita manual em localStorage. Os
+// já sem nota casando hoje ficam prontos para combinações futuras.
+const QUIMIOINFORMATICA_GROUP_SEED = [
+  ["Atomic Simulation Environment", "atomic-simulation-environment"],
+  ["CGM-Freq", "cgm-freq"],
+  ["cgmquantify", "cgmquantify"],
+  ["ChEMBL Structure Pipeline", "chembl structure pipeline"],
+  ["Cinfony", "cinfony"],
+  ["DeepChem", "deepchem"],
+  ["DGL-LifeSci", "dgl-lifesci"],
+  ["gcms-data-analysis", "gcms-data-analysis"],
+  ["MDAnalysis", "mdanalysis"],
+  ["MDTraj", "mdtraj"],
+  ["Mordred (mordredcommunity)", "mordred"],
+  ["OEChem", "oechem"],
+  ["OpenBabel", "openbabel"],
+  ["PaDEL-Descriptor / PyPaDEL", "padel"],
+  ["pyGecko", "pygecko"],
+  ["PyMS / PyMassSpec", "pyms, pymassspec"],
+  ["PySCF", "pyscf"],
+  ["PyCompound", "pycompound"],
+  ["pyhrms", "pyhrms"],
+  ["RDKit", "rdkit"],
+  ["scikit-chem", "scikit-chem"],
+  ["Spectrapy", "spectrapy"],
+  ["TorchDrug", "torchdrug"],
+];
+
+// Seeds the QUIMIOINFORMATICA library groups exactly once per browser —
+// guarded by graphSettings.groupsSeeded so re-running never resurrects a
+// group the user deliberately deleted afterward.
+function seedDefaultGroups() {
+  if (state.graphSettings.groupsSeeded) return;
+  const baseHue = 240; // QUIMIOINFORMATICA's theme hue today — keeps the group palette a close "family" around it
+  const spread = 30;
+  const n = QUIMIOINFORMATICA_GROUP_SEED.length;
+  const seeded = QUIMIOINFORMATICA_GROUP_SEED.map(([name, keyword], i) => {
+    const hue = Math.round(baseHue - spread + (i * (spread * 2)) / (n - 1));
+    const sat = i % 2 === 0 ? 55 : 45;
+    const light = i % 2 === 0 ? 45 : 60;
+    return {
+      id: "qmi-" + keyword.split(",")[0].trim().replace(/[^a-z0-9]+/g, "-"),
+      name,
+      keyword,
+      color: `hsl(${hue}, ${sat}%, ${light}%)`,
+      enabled: true,
+    };
+  });
+  const existingIds = new Set(state.graphSettings.groups.map((g) => g.id));
+  state.graphSettings.groups = state.graphSettings.groups.concat(seeded.filter((g) => !existingIds.has(g.id)));
+  state.graphSettings.groupsSeeded = true;
+  saveGraphSettings();
+}
+
+// Etiquetas que podem virar "sóis" no overlay de etiquetas — cada uma vira um
+// centro brilhante conectado a toda nota que carrega essa tag, exibido junto
+// com o grafo normal de wikilinks (não como uma tela separada).
 const SOLAR_TAGS = [
   "aplicacao/bancos-de-dados-quimicos",
   "aplicacao/catalise",
@@ -101,6 +161,8 @@ function loadGraphSettings() {
       movementIntensity: num(saved.movementIntensity, GRAPH_SETTINGS_DEFAULTS.movementIntensity),
       groups,
       solarTagsDisabled: Array.isArray(saved.solarTagsDisabled) ? saved.solarTagsDisabled : [],
+      showMinhasNotas: typeof saved.showMinhasNotas === "boolean" ? saved.showMinhasNotas : GRAPH_SETTINGS_DEFAULTS.showMinhasNotas,
+      groupsSeeded: typeof saved.groupsSeeded === "boolean" ? saved.groupsSeeded : GRAPH_SETTINGS_DEFAULTS.groupsSeeded,
     };
   } catch {
     return { ...GRAPH_SETTINGS_DEFAULTS, tags: [], groups: [], solarTagsDisabled: [] };
@@ -675,9 +737,10 @@ function collectThemeFolders(nodes) {
 }
 
 function noteMatchesGraphFilters(note) {
-  const { theme, tags } = state.graphSettings;
+  const { theme, tags, showMinhasNotas } = state.graphSettings;
   if (theme && !(note.folder + "/").startsWith(theme + "/")) return false;
   if (tags.length && !tags.some((t) => note.tags.includes(t))) return false;
+  if (!showMinhasNotas && (note.folder || "").split("/").pop() === "Minhas Notas") return false;
   return true;
 }
 
@@ -768,15 +831,50 @@ function populateGraphSettingsUI() {
   renderGraphTagFilter();
   renderGroupsList();
   renderSolarTagToggles();
+  updateMinhasNotasToggleUI();
   applyGraphCssVars();
 }
 
-function folderColor(folder) {
-  const top = (folder || "").split("/")[0] || "raiz";
+function updateMinhasNotasToggleUI() {
+  const btn = el("gsMinhasNotasToggle");
+  const on = state.graphSettings.showMinhasNotas;
+  btn.classList.toggle("active", on);
+  btn.textContent = on ? "Ativado" : "Desativado";
+}
+
+// Groups notes by their specific "tema" folder (e.g. "DATA SCIENCE/CATÁLISE")
+// rather than just the top-level segment, so sibling themes get distinct
+// colors and each theme's hub node matches the color of its own notes.
+function themeKeyFor(folder) {
+  const themes = collectThemeFolders(state.tree);
+  let best = null;
+  for (const t of themes) {
+    if ((folder + "/").startsWith(t.path + "/") && (!best || t.path.length > best.length)) best = t.path;
+  }
+  return best || (folder || "").split("/")[0] || "raiz";
+}
+
+function hashHue(key) {
   let hash = 0;
-  for (let i = 0; i < top.length; i++) hash = top.charCodeAt(i) + ((hash << 5) - hash);
-  const hue = Math.abs(hash) % 360;
-  return `hsl(${hue}, 45%, 55%)`;
+  for (let i = 0; i < key.length; i++) hash = key.charCodeAt(i) + ((hash << 5) - hash);
+  return Math.abs(hash) % 360;
+}
+
+// Themes are colored by their position among all themes (evenly spaced
+// around the hue wheel) so sibling themes never collide on the same color,
+// which a plain string hash occasionally would. Anything outside a theme
+// (Diario, Inbox, Arquivo, ...) still falls back to hash-based coloring.
+// Within a theme, "Artigos" (literature) and "Minhas Notas" (own ideas) keep
+// the same hue but differ in lightness, so the two note kinds stay visually
+// distinguishable at a glance without breaking the theme grouping.
+function folderColor(folder) {
+  const themes = collectThemeFolders(state.tree);
+  const key = themeKeyFor(folder);
+  const idx = themes.findIndex((t) => t.path === key);
+  const hue = idx >= 0 ? Math.round((idx * 360) / themes.length) % 360 : hashHue(key);
+  const segment = (folder || "").split("/").pop();
+  const lightness = segment === "Minhas Notas" ? 72 : 50;
+  return `hsl(${hue}, 45%, ${lightness}%)`;
 }
 
 // A note is colored by the first enabled group whose keyword matches one of
@@ -788,9 +886,14 @@ function nodeColor(d) {
   const title = (d.title || "").toLowerCase();
   for (const g of groups) {
     if (!g.enabled) continue;
-    const kw = (g.keyword || "").toLowerCase().trim();
-    if (!kw) continue;
-    if (tags.includes(kw) || tags.some((t) => t.includes(kw)) || title.includes(kw)) return g.color;
+    // A group's keyword field may hold several comma-separated aliases for
+    // the same tool (e.g. "pyms, pymassspec") — match if any of them hits.
+    const keywords = (g.keyword || "")
+      .split(",")
+      .map((k) => k.toLowerCase().trim())
+      .filter(Boolean);
+    const matched = keywords.some((kw) => tags.includes(kw) || tags.some((t) => t.includes(kw)) || title.includes(kw));
+    if (matched) return g.color;
   }
   return folderColor(d.folder);
 }
@@ -941,6 +1044,15 @@ function wrapLabel(title, maxCharsPerLine) {
   return lines;
 }
 
+// The wrapped label lines for a node, matching how each node kind is
+// actually rendered below its circle (used both for that rendering and to
+// size the collision radius that keeps labels from overlapping neighbors).
+function labelLinesForNode(d) {
+  if (d.isSun) return wrapLabel(sunLabel(d.tag), 13);
+  if (d.isHub) return wrapLabel(d.name, 13);
+  return wrapLabel(d.title, 16);
+}
+
 // Gently nudges every node's velocity each tick so the graph keeps drifting
 // like loose particles instead of settling into a static layout.
 function forceJiggle(strength) {
@@ -968,7 +1080,7 @@ function renderGraph() {
   const nodesMap = new Map();
   for (const [path, note] of Object.entries(state.index)) {
     if (!noteMatchesGraphFilters(note)) continue;
-    nodesMap.set(path, { id: path, title: note.title, folder: note.folder, tags: note.tags, degree: 0 });
+    nodesMap.set(path, { id: path, title: note.title, folder: note.folder, tags: note.tags, isSun: false, isHub: false, degree: 0 });
   }
   const links = [];
   for (const path of nodesMap.keys()) {
@@ -979,13 +1091,8 @@ function renderGraph() {
       }
     }
   }
-  for (const link of links) {
-    nodesMap.get(link.source).degree += 1;
-    nodesMap.get(link.target).degree += 1;
-  }
-  const nodes = Array.from(nodesMap.values());
 
-  if (nodes.length === 0) {
+  if (nodesMap.size === 0) {
     svg
       .append("text")
       .attr("x", width / 2)
@@ -997,17 +1104,91 @@ function renderGraph() {
     return;
   }
 
+  // Every "tema" folder (e.g. QUIMIOINFORMATICA) gets a central hub node that
+  // connects to every note filed under it, so notes cluster by theme even
+  // without manual wikilinks between them. Shown even for themes with no
+  // notes yet (or hidden by filters), so the full taxonomy is always visible.
+  const hubNodes = [];
+  const themes = collectThemeFolders(state.tree);
+  for (const theme of themes) {
+    const hubId = "hub:" + theme.path;
+    for (const [path, node] of nodesMap) {
+      if ((node.folder + "/").startsWith(theme.path + "/")) {
+        links.push({ source: hubId, target: path });
+      }
+    }
+    hubNodes.push({ id: hubId, name: theme.name, folder: theme.path, isHub: true, isSun: false, degree: 0 });
+  }
+  // Themes are placed by hand in a fixed row rather than left to the physics
+  // simulation — a theme with zero notes has no link pulling it anywhere, so
+  // letting repulsion alone decide its spot either flings it off-screen or
+  // (if reined in) fights the rest of the layout. Fixing (fx/fy) also means
+  // hubs don't push each other around: a fixed node ignores every force,
+  // including other hubs' repulsion, while its own notes still cluster
+  // around it normally via the link/collide forces.
+  hubNodes.forEach((h, i) => {
+    h.fx = (width * (i + 1)) / (hubNodes.length + 1);
+    h.fy = height * 0.22;
+  });
+
+  // "Etiquetas" overlay: tags become suns shown together with the regular
+  // wikilink graph, orbit-linked to every note (already a node above) that
+  // carries that tag.
+  const sunNodes = [];
+  if (state.graphSettings.solarMode) {
+    const activeSolarTags = SOLAR_TAGS.filter((t) => !state.graphSettings.solarTagsDisabled.includes(t));
+    for (const tag of activeSolarTags) {
+      sunNodes.push({ id: "sun:" + tag, tag, isSun: true, isHub: false, degree: 0 });
+    }
+    const sunById = new Map(sunNodes.map((s) => [s.id, s]));
+    for (const [path, node] of nodesMap) {
+      for (const t of node.tags || []) {
+        const sunId = "sun:" + t;
+        if (sunById.has(sunId)) links.push({ source: sunId, target: path });
+      }
+    }
+  }
+
+  const nodes = [...nodesMap.values(), ...hubNodes, ...sunNodes];
+  const byId = new Map(nodes.map((n) => [n.id, n]));
+  for (const link of links) {
+    byId.get(link.source).degree += 1;
+    byId.get(link.target).degree += 1;
+  }
+
   const scale = state.graphSettings.nodeScale;
-  const maxDegree = Math.max(1, ...nodes.map((n) => n.degree));
-  const radiusScale = d3.scaleSqrt().domain([0, maxDegree]).range([4 * scale, 16 * scale]).clamp(true);
-  const radiusOf = (d) => radiusScale(d.degree);
+  const noteMaxDegree = Math.max(1, ...Array.from(nodesMap.values(), (n) => n.degree));
+  const noteRadiusScale = d3.scaleSqrt().domain([0, noteMaxDegree]).range([4 * scale, 16 * scale]).clamp(true);
+  const sunMaxDegree = Math.max(1, ...sunNodes.map((n) => n.degree));
+  const sunRadiusScale = d3.scaleSqrt().domain([0, sunMaxDegree]).range([9 * scale, 26 * scale]).clamp(true);
+  const hubMaxDegree = Math.max(1, ...hubNodes.map((n) => n.degree));
+  const hubRadiusScale = d3.scaleSqrt().domain([0, hubMaxDegree]).range([12 * scale, 30 * scale]).clamp(true);
+  const radiusOf = (d) => (d.isHub ? hubRadiusScale(d.degree) : d.isSun ? sunRadiusScale(d.degree) : noteRadiusScale(d.degree));
+  nodes.forEach((n) => { n._r = radiusOf(n); });
+
+  // The label always sits centered directly below the circle (never beside
+  // or overlapping it) — this collide radius reserves enough room around
+  // each node for its own wrapped label text (both its width, which is what
+  // actually causes overlap between side-by-side siblings, and its height),
+  // so neighboring nodes' circles and labels can't land on top of it.
+  const s = state.graphSettings;
+  const labelLinesById = new Map(nodes.map((n) => [n.id, labelLinesForNode(n)]));
+  const collideRadius = (d) => {
+    const base = radiusOf(d) + (d.isHub ? 24 : d.isSun ? 20 : 14);
+    if (d._r < s.labelVisibilityThreshold) return base;
+    const lines = labelLinesById.get(d.id);
+    const maxChars = Math.max(0, ...lines.map((l) => l.length));
+    const halfWidth = (maxChars * s.fontSize * 0.62) / 2;
+    const verticalReach = radiusOf(d) + 8 + lines.length * s.fontSize * 1.15 + 4;
+    const labelReach = radiusOf(d) + halfWidth + 6;
+    return Math.max(base, verticalReach, labelReach);
+  };
 
   const g = svg.append("g");
   svg.call(
     d3.zoom().scaleExtent([0.2, 4]).on("zoom", (event) => g.attr("transform", event.transform))
   );
 
-  const s = state.graphSettings;
   const ambientAlpha = s.movementIntensity > 0 ? 0.03 + s.movementIntensity * 0.12 : 0;
 
   const simulation = d3
@@ -1015,10 +1196,20 @@ function renderGraph() {
     .alphaDecay(0.02)
     .alphaTarget(ambientAlpha)
     .velocityDecay(0.35)
-    .force("link", d3.forceLink(links).id((d) => d.id).distance(s.linkDistance).strength(s.linkStrength))
-    .force("charge", d3.forceManyBody().strength((d) => -s.chargeStrength - radiusOf(d) * 6))
+    .force(
+      "link",
+      d3
+        .forceLink(links)
+        .id((d) => d.id)
+        .distance((d) => radiusOf(d.source) + radiusOf(d.target) + s.linkDistance)
+        .strength(s.linkStrength)
+    )
+    .force(
+      "charge",
+      d3.forceManyBody().strength((d) => (d.isHub ? -s.chargeStrength * 6 : d.isSun ? -s.chargeStrength * 4 : -s.chargeStrength - radiusOf(d) * 6))
+    )
     .force("center", d3.forceCenter(width / 2, height / 2).strength(s.centerStrength))
-    .force("collide", d3.forceCollide((d) => radiusOf(d) + 14))
+    .force("collide", d3.forceCollide(collideRadius).iterations(3))
     .force("jiggle", forceJiggle(s.movementIntensity * 1.2));
 
   const link = g
@@ -1028,12 +1219,35 @@ function renderGraph() {
     .join("line")
     .attr("class", "graph-link");
 
+  // Hovering any circle (sun or note) highlights everything it's connected
+  // to; everything else fades to 50% opacity while the mouse stays over it.
+  function applyFocus(focusedId) {
+    if (!focusedId) {
+      node.classed("dimmed", false);
+      link.classed("dimmed", false);
+      return;
+    }
+    const connected = new Set([focusedId]);
+    for (const l of links) {
+      const src = typeof l.source === "object" ? l.source.id : l.source;
+      const tgt = typeof l.target === "object" ? l.target.id : l.target;
+      if (src === focusedId) connected.add(tgt);
+      if (tgt === focusedId) connected.add(src);
+    }
+    node.classed("dimmed", (d) => !connected.has(d.id));
+    link.classed("dimmed", (l) => {
+      const src = typeof l.source === "object" ? l.source.id : l.source;
+      const tgt = typeof l.target === "object" ? l.target.id : l.target;
+      return src !== focusedId && tgt !== focusedId;
+    });
+  }
+
   const node = g
     .append("g")
     .selectAll("g")
     .data(nodes)
     .join("g")
-    .attr("class", "graph-node")
+    .attr("class", (d) => "graph-node" + (d.isSun ? " sun" : "") + (d.isHub ? " hub" : ""))
     .call(
       d3
         .drag()
@@ -1048,18 +1262,30 @@ function renderGraph() {
         })
         .on("end", (event, d) => {
           if (!event.active) simulation.alphaTarget(ambientAlpha);
-          d.fx = null;
-          d.fy = null;
+          // Hubs stay fixed wherever they're dropped — they're manually
+          // positioned, not physics-driven, so they shouldn't spring free.
+          if (!d.isHub) {
+            d.fx = null;
+            d.fy = null;
+          }
         })
     )
-    .on("click", (event, d) => openNote(d.id));
+    .on("mouseenter", (event, d) => applyFocus(d.id))
+    .on("mouseleave", () => applyFocus(null))
+    .on("click", (event, d) => {
+      if (!d.isSun && !d.isHub) openNote(d.id);
+    });
 
-  node.append("circle").attr("r", radiusOf).attr("fill", (d) => nodeColor(d));
+  node.append("circle").attr("r", radiusOf).attr("fill", (d) => (d.isSun ? null : nodeColor(d)));
+  node.append("title").text((d) => {
+    if (d.isSun) return `${d.tag} (${d.degree} nota${d.degree === 1 ? "" : "s"})`;
+    if (d.isHub) return `${d.name} (${d.degree} nota${d.degree === 1 ? "" : "s"})`;
+    return d.title;
+  });
 
-  nodes.forEach((n) => { n._r = radiusOf(n); });
   const label = node.append("text").attr("dy", (d) => radiusOf(d) + 8);
   label.each(function (d) {
-    const lines = wrapLabel(d.title, 16);
+    const lines = labelLinesById.get(d.id);
     const text = d3.select(this);
     lines.forEach((line, i) => {
       text
@@ -1094,192 +1320,15 @@ function renderGraph() {
 }
 
 // ---------------------------------------------------------------------
-// Solar system view — etiquetas viram "sóis" e as notas que carregam
-// aquela etiqueta orbitam ao redor dela como planetas.
+// Etiquetas overlay — tags become "suns" shown alongside the regular
+// wikilink graph, with orbit links to every note carrying that tag.
 // ---------------------------------------------------------------------
 function sunLabel(tag) {
   return tag.split("/").pop().replace(/-/g, " ");
 }
 
-function renderSolarSystem() {
-  applyGraphCssVars();
-  const svg = d3.select("#graphSvg");
-  svg.selectAll("*").remove();
-  const wrap = document.getElementById("graphView");
-  const width = wrap.clientWidth || 800;
-  const height = wrap.clientHeight || 600;
-  svg.attr("viewBox", [0, 0, width, height]);
-
-  const scale = state.graphSettings.nodeScale;
-
-  const activeSolarTags = SOLAR_TAGS.filter((t) => !state.graphSettings.solarTagsDisabled.includes(t));
-  const sunNodes = activeSolarTags.map((tag) => ({ id: "sun:" + tag, tag, isSun: true, degree: 0 }));
-  const sunById = new Map(sunNodes.map((s) => [s.id, s]));
-
-  const planetNodes = [];
-  const links = [];
-  for (const [path, note] of Object.entries(state.index)) {
-    if (!noteMatchesGraphFilters(note)) continue;
-    const matchingTags = note.tags.filter((t) => sunById.has("sun:" + t));
-    if (matchingTags.length === 0) continue;
-    planetNodes.push({
-      id: path,
-      title: note.title,
-      folder: note.folder,
-      tags: note.tags,
-      isSun: false,
-      degree: matchingTags.length,
-    });
-    for (const t of matchingTags) {
-      links.push({ source: "sun:" + t, target: path });
-      sunById.get("sun:" + t).degree += 1;
-    }
-  }
-
-  if (planetNodes.length === 0) {
-    svg
-      .append("text")
-      .attr("x", width / 2)
-      .attr("y", height / 2)
-      .attr("text-anchor", "middle")
-      .attr("fill", "var(--text-dim)")
-      .attr("font-size", 13)
-      .text("Nenhuma nota com essas etiquetas (ou os filtros escondem todas).");
-    return;
-  }
-
-  const nodes = [...sunNodes, ...planetNodes];
-  const maxSunDegree = Math.max(1, ...sunNodes.map((n) => n.degree));
-  const sunRadiusScale = d3.scaleSqrt().domain([0, maxSunDegree]).range([9 * scale, 26 * scale]).clamp(true);
-  const maxPlanetDegree = Math.max(1, ...planetNodes.map((n) => n.degree));
-  const planetRadiusScale = d3.scaleSqrt().domain([1, maxPlanetDegree]).range([3.5 * scale, 9 * scale]).clamp(true);
-  const radiusOf = (d) => (d.isSun ? sunRadiusScale(d.degree) : planetRadiusScale(d.degree));
-
-  const g = svg.append("g");
-  svg.call(
-    d3.zoom().scaleExtent([0.2, 4]).on("zoom", (event) => g.attr("transform", event.transform))
-  );
-
-  const s = state.graphSettings;
-  const ambientAlpha = s.movementIntensity > 0 ? 0.03 + s.movementIntensity * 0.12 : 0;
-  const simulation = d3
-    .forceSimulation(nodes)
-    .alphaDecay(0.02)
-    .alphaTarget(ambientAlpha)
-    .velocityDecay(0.35)
-    .force(
-      "link",
-      d3
-        .forceLink(links)
-        .id((d) => d.id)
-        .distance((d) => radiusOf(d.source) + radiusOf(d.target) + s.linkDistance)
-        .strength(s.linkStrength)
-    )
-    .force("charge", d3.forceManyBody().strength((d) => (d.isSun ? -s.chargeStrength * 4 : -s.chargeStrength * 0.5)))
-    .force("center", d3.forceCenter(width / 2, height / 2).strength(s.centerStrength))
-    .force("collide", d3.forceCollide((d) => radiusOf(d) + (d.isSun ? 20 : 10)))
-    .force("jiggle", forceJiggle(s.movementIntensity * 1.2));
-
-  const link = g.append("g").selectAll("line").data(links).join("line").attr("class", "graph-link orbit");
-
-  // Clicking a sun highlights it and the planets orbiting it; clicking it
-  // again (or another sun) resets/moves the focus.
-  let focusedSun = null;
-  function applyFocus() {
-    if (!focusedSun) {
-      node.classed("dimmed", false);
-      link.classed("dimmed", false);
-      return;
-    }
-    const connected = new Set([focusedSun]);
-    for (const l of links) {
-      const src = typeof l.source === "object" ? l.source.id : l.source;
-      const tgt = typeof l.target === "object" ? l.target.id : l.target;
-      if (src === focusedSun) connected.add(tgt);
-      if (tgt === focusedSun) connected.add(src);
-    }
-    node.classed("dimmed", (d) => !connected.has(d.id));
-    link.classed("dimmed", (l) => {
-      const src = typeof l.source === "object" ? l.source.id : l.source;
-      const tgt = typeof l.target === "object" ? l.target.id : l.target;
-      return src !== focusedSun && tgt !== focusedSun;
-    });
-  }
-
-  const node = g
-    .append("g")
-    .selectAll("g")
-    .data(nodes)
-    .join("g")
-    .attr("class", (d) => "graph-node" + (d.isSun ? " sun" : ""))
-    .call(
-      d3
-        .drag()
-        .on("start", (event, d) => {
-          if (!event.active) simulation.alphaTarget(0.3).restart();
-          d.fx = d.x;
-          d.fy = d.y;
-        })
-        .on("drag", (event, d) => {
-          d.fx = event.x;
-          d.fy = event.y;
-        })
-        .on("end", (event, d) => {
-          if (!event.active) simulation.alphaTarget(ambientAlpha);
-          d.fx = null;
-          d.fy = null;
-        })
-    )
-    .on("click", (event, d) => {
-      if (d.isSun) {
-        focusedSun = focusedSun === d.id ? null : d.id;
-        applyFocus();
-      } else {
-        openNote(d.id);
-      }
-    });
-
-  node.append("circle").attr("r", radiusOf).attr("fill", (d) => (d.isSun ? null : nodeColor(d)));
-  node.append("title").text((d) => (d.isSun ? `${d.tag} (${d.degree} nota${d.degree === 1 ? "" : "s"})` : d.title));
-
-  nodes.forEach((n) => { n._r = radiusOf(n); });
-  const label = node.append("text").attr("dy", (d) => radiusOf(d) + 8);
-  label.each(function (d) {
-    const text = d3.select(this);
-    const lines = d.isSun ? wrapLabel(sunLabel(d.tag), 13) : wrapLabel(d.title, 16);
-    lines.forEach((line, i) => {
-      text
-        .append("tspan")
-        .attr("x", 0)
-        .attr("dy", i === 0 ? 0 : "1.05em")
-        .text(line);
-    });
-  });
-  currentLabelSelection = label;
-  applyLabelVisibility();
-
-  simulation.on("tick", () => {
-    link
-      .attr("x1", (d) => d.source.x)
-      .attr("y1", (d) => d.source.y)
-      .attr("x2", (d) => d.target.x)
-      .attr("y2", (d) => d.target.y);
-    node.attr("transform", (d) => `translate(${d.x},${d.y})`);
-  });
-
-  const graphViewEl = document.getElementById("graphView");
-  const stopObserver = new MutationObserver(() => {
-    if (graphViewEl.classList.contains("hidden")) {
-      simulation.stop();
-      stopObserver.disconnect();
-    }
-  });
-  stopObserver.observe(graphViewEl, { attributes: true, attributeFilter: ["class"] });
-}
-
 function renderActiveGraph() {
-  if (state.graphSettings.solarMode) renderSolarSystem();
-  else renderGraph();
+  renderGraph();
 }
 
 function updateSolarToggleUI() {
@@ -1379,6 +1428,13 @@ el("gsThemeFilter").addEventListener("change", (e) => {
   renderActiveGraph();
 });
 
+el("gsMinhasNotasToggle").addEventListener("click", () => {
+  state.graphSettings.showMinhasNotas = !state.graphSettings.showMinhasNotas;
+  saveGraphSettings();
+  updateMinhasNotasToggleUI();
+  renderActiveGraph();
+});
+
 el("gsReset").addEventListener("click", () => {
   state.graphSettings = { ...GRAPH_SETTINGS_DEFAULTS, tags: [], groups: [], solarTagsDisabled: [] };
   saveGraphSettings();
@@ -1396,5 +1452,12 @@ async function refreshAll() {
   renderTagList();
 }
 
-// O grafo é a tela inicial padrão (em vez do estado vazio "selecione uma nota").
+// O grafo é a tela inicial padrão (em vez do estado vazio "selecione uma nota"),
+// sempre aberto com todos os temas visíveis e sem filtros aplicados — mesmo
+// que a sessão anterior tivesse deixado algum filtro ativo.
+state.graphSettings.theme = "";
+state.graphSettings.tags = [];
+state.graphSettings.solarTagsDisabled = [];
+saveGraphSettings();
+seedDefaultGroups();
 refreshAll().then(showGraphView);
