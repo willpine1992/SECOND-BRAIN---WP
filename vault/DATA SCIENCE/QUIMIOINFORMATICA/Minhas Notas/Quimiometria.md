@@ -7,6 +7,8 @@ data: 2026-09-14
 
 Visão geral do trabalho de pós-doc em quimiometria (esta pasta, DATA SCIENCE/QUIMIOINFORMATICA, já é o "tema" — esta nota é só um ponto de entrada rápido).
 
+Ver também: [[Ciências Ambientais]]
+
 ## Projetos ativos
 - [[Dashboard Vagem-Palma]]
 

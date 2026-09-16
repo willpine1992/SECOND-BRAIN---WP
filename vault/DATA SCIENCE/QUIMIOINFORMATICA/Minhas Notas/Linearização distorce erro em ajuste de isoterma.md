@@ -18,3 +18,4 @@ Regra prática: nunca descartar um modelo de isoterma/cinética só porque a ver
 
 ## Relacionadas
 - [[Bioadsorção]]
+- [[Biosorção de Metais Pesados por Fungos]] — vale como lente crítica ao ler esses artigos: vários usam Langmuir/Freundlich linearizado pra caracterizar a biossorção fúngica
