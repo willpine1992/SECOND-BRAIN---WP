@@ -23,6 +23,7 @@ const GRAPH_SETTINGS_DEFAULTS = {
   solarTagsDisabled: [],
   showMinhasNotas: true,
   groupsSeeded: false,
+  collabGroupsSeeded: false,
 };
 
 // Grupos por palavra-chave para as bibliotecas/ferramentas de QUIMIOINFORMATICA
@@ -79,6 +80,31 @@ function seedDefaultGroups() {
   const existingIds = new Set(state.graphSettings.groups.map((g) => g.id));
   state.graphSettings.groups = state.graphSettings.groups.concat(seeded.filter((g) => !existingIds.has(g.id)));
   state.graphSettings.groupsSeeded = true;
+  saveGraphSettings();
+}
+
+// Grupos para as notas de fila de leitura das buscas de colaboradores no
+// CIÊNCIAS AMBIENTAIS, casando pela tag "busca/..." que a nota recebeu quando
+// foi criada a partir daquela busca exata do Google Scholar:
+// - Sérgio: ("sulfate reduction" AND "mercury" AND "methylmercury") AND (sediment OR anaerobic)
+// - Patrícia: (fungi OR fungal OR mycelium OR spores) AND ("heavy metals" OR "heavy metal") AND (adsorption OR biosorption)
+const COLABORADORES_GROUP_SEED = [
+  ["Sérgio — Sulfato/Mercúrio/Metilmercúrio", "busca/sulfato-reducao-hg-metilmercurio", "#6a5acd"],
+  ["Patrícia — Fungos e Biosorção de Metais Pesados", "busca/fungos-metais-pesados-biosorcao", "#e0607e"],
+];
+
+function seedCollaboratorGroups() {
+  if (state.graphSettings.collabGroupsSeeded) return;
+  const seeded = COLABORADORES_GROUP_SEED.map(([name, keyword, color]) => ({
+    id: "colab-" + keyword.split("/").pop(),
+    name,
+    keyword,
+    color,
+    enabled: true,
+  }));
+  const existingIds = new Set(state.graphSettings.groups.map((g) => g.id));
+  state.graphSettings.groups = state.graphSettings.groups.concat(seeded.filter((g) => !existingIds.has(g.id)));
+  state.graphSettings.collabGroupsSeeded = true;
   saveGraphSettings();
 }
 
@@ -163,6 +189,7 @@ function loadGraphSettings() {
       solarTagsDisabled: Array.isArray(saved.solarTagsDisabled) ? saved.solarTagsDisabled : [],
       showMinhasNotas: typeof saved.showMinhasNotas === "boolean" ? saved.showMinhasNotas : GRAPH_SETTINGS_DEFAULTS.showMinhasNotas,
       groupsSeeded: typeof saved.groupsSeeded === "boolean" ? saved.groupsSeeded : GRAPH_SETTINGS_DEFAULTS.groupsSeeded,
+      collabGroupsSeeded: typeof saved.collabGroupsSeeded === "boolean" ? saved.collabGroupsSeeded : GRAPH_SETTINGS_DEFAULTS.collabGroupsSeeded,
     };
   } catch {
     return { ...GRAPH_SETTINGS_DEFAULTS, tags: [], groups: [], solarTagsDisabled: [] };
@@ -461,6 +488,7 @@ async function openNote(path) {
   el("graphSettingsBtn").classList.add("hidden");
   el("graphSettingsPanel").classList.add("hidden");
   el("solarToggleBtn").classList.add("hidden");
+  el("minhasNotasToggleBtn").classList.add("hidden");
   el("editorView").classList.remove("hidden");
   el("notePath").textContent = path;
   el("editorTextarea").value = data.content;
@@ -836,10 +864,9 @@ function populateGraphSettingsUI() {
 }
 
 function updateMinhasNotasToggleUI() {
-  const btn = el("gsMinhasNotasToggle");
+  const btn = el("minhasNotasToggleBtn");
   const on = state.graphSettings.showMinhasNotas;
   btn.classList.toggle("active", on);
-  btn.textContent = on ? "Ativado" : "Desativado";
 }
 
 // Groups notes by their specific "tema" folder (e.g. "DATA SCIENCE/CATÁLISE")
@@ -1072,7 +1099,11 @@ function renderGraph() {
   applyGraphCssVars();
   const svg = d3.select("#graphSvg");
   svg.selectAll("*").remove();
-  const wrap = document.getElementById("graphView");
+  // Mede o próprio <svg>, não o #graphView — desde que o painel de
+  // configurações passou a ser uma coluna fixa dentro de #graphView (em vez
+  // de um overlay absoluto), o wrapper inteiro não reflete mais a largura
+  // real disponível para o grafo.
+  const wrap = document.getElementById("graphSvg");
   const width = wrap.clientWidth || 800;
   const height = wrap.clientHeight || 600;
   svg.attr("viewBox", [0, 0, width, height]);
@@ -1341,8 +1372,10 @@ function showGraphView() {
   el("graphView").classList.remove("hidden");
   el("graphSettingsBtn").classList.remove("hidden");
   el("solarToggleBtn").classList.remove("hidden");
+  el("minhasNotasToggleBtn").classList.remove("hidden");
   populateGraphSettingsUI();
   updateSolarToggleUI();
+  updateMinhasNotasToggleUI();
   renderActiveGraph();
 }
 
@@ -1357,6 +1390,9 @@ el("solarToggleBtn").addEventListener("click", () => {
 
 el("graphSettingsBtn").addEventListener("click", () => {
   el("graphSettingsPanel").classList.toggle("hidden");
+  // O painel agora ocupa espaço em vez de flutuar por cima do svg, então o
+  // grafo precisa recalcular sua largura disponível e recentralizar.
+  requestAnimationFrame(() => renderActiveGraph());
 });
 
 el("gsFontSize").addEventListener("input", (e) => {
@@ -1428,7 +1464,7 @@ el("gsThemeFilter").addEventListener("change", (e) => {
   renderActiveGraph();
 });
 
-el("gsMinhasNotasToggle").addEventListener("click", () => {
+el("minhasNotasToggleBtn").addEventListener("click", () => {
   state.graphSettings.showMinhasNotas = !state.graphSettings.showMinhasNotas;
   saveGraphSettings();
   updateMinhasNotasToggleUI();
@@ -1460,4 +1496,5 @@ state.graphSettings.tags = [];
 state.graphSettings.solarTagsDisabled = [];
 saveGraphSettings();
 seedDefaultGroups();
+seedCollaboratorGroups();
 refreshAll().then(showGraphView);
