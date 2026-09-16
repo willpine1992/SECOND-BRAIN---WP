@@ -149,8 +149,8 @@ a.btn { display: inline-block; text-decoration: none; }
 
 .tag-list { display: flex; flex-wrap: wrap; gap: 5px; }
 .tag-pill {
-  background: var(--tag-bg);
-  color: var(--text);
+  background: #f5d547;
+  color: #3a2f00;
   border-radius: 20px;
   padding: 3px 9px;
   font-size: 11px;
@@ -158,7 +158,7 @@ a.btn { display: inline-block; text-decoration: none; }
   border: 1px solid transparent;
 }
 .tag-pill:hover { border-color: var(--accent); }
-.tag-pill.active { background: var(--accent); color: #fff; }
+.tag-pill.active { background: #e0b400; color: #3a2f00; }
 
 #main { flex: 1; min-width: 0; display: flex; flex-direction: column; position: relative; }
 .hidden { display: none !important; }

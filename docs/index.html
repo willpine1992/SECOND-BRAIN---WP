@@ -16,6 +16,11 @@
     ou excluir notas, rode o app localmente
     (<a href="https://github.com/willpine1992/SECOND-BRAIN---WP" target="_blank" rel="noopener noreferrer">ver repositório</a>).
   </div>
+  <div id="brandBar">
+    Powered by William Pinheiro ·
+    <a href="http://lattes.cnpq.br/9111919283952655" target="_blank" rel="noopener noreferrer">Lattes</a> ·
+    <a href="https://orcid.org/0000-0003-0758-8292" target="_blank" rel="noopener noreferrer">ORCID</a>
+  </div>
 
   <header id="topbar">
     <button id="toggleSidebar" class="icon-btn" title="Alternar painel">☰</button>
@@ -25,6 +30,7 @@
     </div>
     <div class="topbar-actions">
       <button id="graphBtn" class="btn">Grafo</button>
+      <button id="solarToggleBtn" class="btn hidden" title="Alternar visão Sistema Solar (etiquetas = sóis, artigos = planetas)">🌞 Sistema Solar</button>
       <button id="graphSettingsBtn" class="icon-btn hidden" title="Configurações do grafo">⚙</button>
       <button id="themeBtn" class="icon-btn" title="Alternar tema">◐</button>
     </div>
@@ -66,24 +72,68 @@
         <div id="graphSettingsPanel" class="graph-settings hidden">
           <div class="graph-settings-title">Configurações do grafo</div>
 
-          <label class="gs-label">Tamanho da fonte <span id="gsFontSizeVal"></span></label>
-          <input id="gsFontSize" type="range" min="3" max="10" step="0.5" />
+          <div class="gs-tabs">
+            <button id="gsTabForca" class="gs-tab active" data-tab="forca">Força</button>
+            <button id="gsTabTela" class="gs-tab" data-tab="tela">Tela</button>
+            <button id="gsTabGrupos" class="gs-tab" data-tab="grupos">Grupos</button>
+          </div>
 
-          <label class="gs-label">Tamanho dos círculos <span id="gsNodeSizeVal"></span></label>
-          <input id="gsNodeSize" type="range" min="0.4" max="2" step="0.1" />
+          <div id="gsPanelForca" class="gs-panel">
+            <label class="gs-label">Força centrípeta <span id="gsCenterStrengthVal"></span></label>
+            <input id="gsCenterStrength" type="range" min="0" max="2" step="0.1" />
 
-          <label class="gs-label">Intensidade das linhas <span id="gsLinkIntensityVal"></span></label>
-          <input id="gsLinkIntensity" type="range" min="0.05" max="1" step="0.05" />
+            <label class="gs-label">Força de repulsão <span id="gsChargeStrengthVal"></span></label>
+            <input id="gsChargeStrength" type="range" min="10" max="300" step="10" />
 
-          <label class="gs-label">Tema</label>
-          <select id="gsThemeFilter">
-            <option value="">Todos os temas</option>
-          </select>
+            <label class="gs-label">Força dos links <span id="gsLinkStrengthVal"></span></label>
+            <input id="gsLinkStrength" type="range" min="0" max="1" step="0.05" />
 
-          <label class="gs-label">Etiquetas</label>
-          <div id="gsTagFilter" class="gs-tag-filter"></div>
+            <label class="gs-label">Distância dos links <span id="gsLinkDistanceVal"></span></label>
+            <input id="gsLinkDistance" type="range" min="10" max="150" step="5" />
 
-          <button id="gsReset" class="btn" style="margin-top:10px;">Restaurar padrão</button>
+            <label class="gs-label">Intensidade do movimento contínuo <span id="gsMovementVal"></span></label>
+            <input id="gsMovement" type="range" min="0" max="1" step="0.05" />
+          </div>
+
+          <div id="gsPanelTela" class="gs-panel hidden">
+            <label class="gs-label">Limite de visibilidade textual <span id="gsLabelThresholdVal"></span></label>
+            <input id="gsLabelThreshold" type="range" min="0" max="20" step="1" />
+
+            <label class="gs-label">Tamanho da fonte <span id="gsFontSizeVal"></span></label>
+            <input id="gsFontSize" type="range" min="3" max="10" step="0.5" />
+
+            <label class="gs-label">Tamanho dos círculos <span id="gsNodeSizeVal"></span></label>
+            <input id="gsNodeSize" type="range" min="0.4" max="2" step="0.1" />
+
+            <label class="gs-label">Grossura dos links <span id="gsLinkIntensityVal"></span></label>
+            <input id="gsLinkIntensity" type="range" min="0.05" max="1" step="0.05" />
+
+            <label class="gs-label">Tema</label>
+            <select id="gsThemeFilter">
+              <option value="">Todos os temas</option>
+            </select>
+
+            <label class="gs-label">Etiquetas</label>
+            <div id="gsTagFilter" class="gs-tag-filter"></div>
+          </div>
+
+          <div id="gsPanelGrupos" class="gs-panel hidden">
+            <div class="graph-settings-subtitle">Grupos por palavra-chave</div>
+            <div id="groupsList" class="groups-list"></div>
+            <div class="group-form">
+              <input id="groupName" type="text" placeholder="Nome do grupo" />
+              <input id="groupKeyword" type="text" placeholder="Palavra-chave ou etiqueta" />
+              <div class="group-form-row">
+                <input id="groupColor" type="color" value="#4a6fa5" />
+                <button id="groupAdd" class="btn">+ Adicionar grupo</button>
+              </div>
+            </div>
+
+            <div class="graph-settings-subtitle" style="margin-top:14px;">Etiquetas do Sistema Solar</div>
+            <div id="solarTagToggles" class="gs-tag-filter"></div>
+          </div>
+
+          <button id="gsReset" class="btn" style="margin-top:12px;">Restaurar padrão</button>
         </div>
       </div>
     </main>

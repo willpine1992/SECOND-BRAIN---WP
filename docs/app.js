@@ -10,20 +10,104 @@ const el = (id) => document.getElementById(id);
 // Graph settings (persisted per-browser; not vault content)
 // ---------------------------------------------------------------------
 const GRAPH_SETTINGS_KEY = "sb-graph-settings";
-const GRAPH_SETTINGS_DEFAULTS = { fontSize: 5, nodeScale: 1, linkIntensity: 0.45, theme: "", tags: [] };
+const GRAPH_SETTINGS_DEFAULTS = {
+  fontSize: 5,
+  nodeScale: 1,
+  linkIntensity: 0.45,
+  theme: "",
+  tags: [],
+  solarMode: false,
+  centerStrength: 1,
+  chargeStrength: 80,
+  linkStrength: 0.35,
+  linkDistance: 60,
+  labelVisibilityThreshold: 0,
+  movementIntensity: 0,
+  groups: [],
+  solarTagsDisabled: [],
+};
+
+// Etiquetas usadas como "sóis" na visão Sistema Solar — cada uma vira um
+// centro brilhante e as notas que carregam essa tag orbitam ao redor dela.
+const SOLAR_TAGS = [
+  "aplicacao/bancos-de-dados-quimicos",
+  "aplicacao/catalise",
+  "aplicacao/ciencia-de-alimentos",
+  "aplicacao/ciencia-de-materiais",
+  "aplicacao/descoberta-de-farmacos",
+  "aplicacao/quimica-ambiental",
+  "aplicacao/quimica-analitica",
+  "aplicacao/quimica-computacional-geral",
+  "biblioteca/atomic-simulation-environment",
+  "biblioteca/deepchem",
+  "biblioteca/mdanalysis",
+  "biblioteca/mordred",
+  "biblioteca/openbabel",
+  "biblioteca/padel-descriptor",
+  "biblioteca/pyscf",
+  "biblioteca/rdkit",
+  "biblioteca/torchdrug",
+  "bioadsorcao",
+  "diario",
+  "estatistica",
+  "estrategia",
+  "fila-leitura",
+  "indice",
+  "literatura",
+  "meta",
+  "permanente",
+  "projeto",
+  "quimiometria",
+  "sessao",
+  "tema/computacao-quantica",
+  "tema/curadoria-de-dados-quimicos",
+  "tema/docking",
+  "tema/geracao-de-moleculas",
+  "tema/interpretabilidade-xai",
+  "tema/materiais-polimericos",
+  "tema/planejamento-de-sintese",
+  "tema/predicao-de-propriedades",
+  "tema/quimica-computacional-geral",
+  "tema/simulacao-molecular",
+  "tema/triagem-virtual",
+  "tema/visualizacao-de-espaco-quimico",
+  "tutorial",
+  "índice",
+];
 
 function loadGraphSettings() {
   try {
     const saved = JSON.parse(localStorage.getItem(GRAPH_SETTINGS_KEY) || "{}");
+    const num = (v, fallback) => (typeof v === "number" && !Number.isNaN(v) ? v : fallback);
+    const groups = Array.isArray(saved.groups)
+      ? saved.groups
+          .filter((g) => g && typeof g === "object")
+          .map((g) => ({
+            id: typeof g.id === "string" ? g.id : Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+            name: typeof g.name === "string" ? g.name : "",
+            keyword: typeof g.keyword === "string" ? g.keyword : "",
+            color: typeof g.color === "string" ? g.color : "#4a6fa5",
+            enabled: typeof g.enabled === "boolean" ? g.enabled : true,
+          }))
+      : [];
     return {
-      fontSize: typeof saved.fontSize === "number" ? saved.fontSize : GRAPH_SETTINGS_DEFAULTS.fontSize,
-      nodeScale: typeof saved.nodeScale === "number" ? saved.nodeScale : GRAPH_SETTINGS_DEFAULTS.nodeScale,
-      linkIntensity: typeof saved.linkIntensity === "number" ? saved.linkIntensity : GRAPH_SETTINGS_DEFAULTS.linkIntensity,
+      fontSize: num(saved.fontSize, GRAPH_SETTINGS_DEFAULTS.fontSize),
+      nodeScale: num(saved.nodeScale, GRAPH_SETTINGS_DEFAULTS.nodeScale),
+      linkIntensity: num(saved.linkIntensity, GRAPH_SETTINGS_DEFAULTS.linkIntensity),
       theme: typeof saved.theme === "string" ? saved.theme : GRAPH_SETTINGS_DEFAULTS.theme,
       tags: Array.isArray(saved.tags) ? saved.tags : [],
+      solarMode: typeof saved.solarMode === "boolean" ? saved.solarMode : GRAPH_SETTINGS_DEFAULTS.solarMode,
+      centerStrength: num(saved.centerStrength, GRAPH_SETTINGS_DEFAULTS.centerStrength),
+      chargeStrength: num(saved.chargeStrength, GRAPH_SETTINGS_DEFAULTS.chargeStrength),
+      linkStrength: num(saved.linkStrength, GRAPH_SETTINGS_DEFAULTS.linkStrength),
+      linkDistance: num(saved.linkDistance, GRAPH_SETTINGS_DEFAULTS.linkDistance),
+      labelVisibilityThreshold: num(saved.labelVisibilityThreshold, GRAPH_SETTINGS_DEFAULTS.labelVisibilityThreshold),
+      movementIntensity: num(saved.movementIntensity, GRAPH_SETTINGS_DEFAULTS.movementIntensity),
+      groups,
+      solarTagsDisabled: Array.isArray(saved.solarTagsDisabled) ? saved.solarTagsDisabled : [],
     };
   } catch {
-    return { ...GRAPH_SETTINGS_DEFAULTS, tags: [] };
+    return { ...GRAPH_SETTINGS_DEFAULTS, tags: [], groups: [], solarTagsDisabled: [] };
   }
 }
 
@@ -240,6 +324,7 @@ function openNote(path) {
   el("graphView").classList.add("hidden");
   el("graphSettingsBtn").classList.add("hidden");
   el("graphSettingsPanel").classList.add("hidden");
+  el("solarToggleBtn").classList.add("hidden");
   el("editorView").classList.remove("hidden");
   el("notePath").textContent = path;
   el("editorTextarea").value = note.content;
@@ -437,6 +522,25 @@ function applyGraphCssVars() {
   if (!svgEl) return;
   svgEl.style.setProperty("--graph-font-size", state.graphSettings.fontSize + "px");
   svgEl.style.setProperty("--graph-link-opacity", state.graphSettings.linkIntensity);
+  svgEl.style.setProperty("--graph-link-width", (0.5 + state.graphSettings.linkIntensity * 2.5).toFixed(2) + "px");
+}
+
+// Labels are always created but hidden/shown live from the last render's
+// selection, so dragging the threshold slider doesn't require re-simulating.
+let currentLabelSelection = null;
+function applyLabelVisibility() {
+  if (!currentLabelSelection) return;
+  const threshold = state.graphSettings.labelVisibilityThreshold;
+  currentLabelSelection.style("display", (d) => (d._r >= threshold ? null : "none"));
+}
+
+// Debounced re-render for settings that require restarting the force
+// simulation (as opposed to font size / link opacity / label threshold,
+// which apply live without rebuilding the layout).
+let forceRenderDebounce;
+function debounceRenderActiveGraph() {
+  clearTimeout(forceRenderDebounce);
+  forceRenderDebounce = setTimeout(renderActiveGraph, 150);
 }
 
 function renderGraphThemeFilter() {
@@ -471,7 +575,7 @@ function renderGraphTagFilter() {
       else state.graphSettings.tags.splice(idx, 1);
       saveGraphSettings();
       renderGraphTagFilter();
-      renderGraph();
+      renderActiveGraph();
     });
     box.appendChild(pill);
   }
@@ -484,10 +588,160 @@ function populateGraphSettingsUI() {
   el("gsNodeSizeVal").textContent = state.graphSettings.nodeScale.toFixed(1) + "×";
   el("gsLinkIntensity").value = state.graphSettings.linkIntensity;
   el("gsLinkIntensityVal").textContent = state.graphSettings.linkIntensity.toFixed(2);
+  el("gsLabelThreshold").value = state.graphSettings.labelVisibilityThreshold;
+  el("gsLabelThresholdVal").textContent = state.graphSettings.labelVisibilityThreshold;
+  el("gsCenterStrength").value = state.graphSettings.centerStrength;
+  el("gsCenterStrengthVal").textContent = state.graphSettings.centerStrength.toFixed(1);
+  el("gsChargeStrength").value = state.graphSettings.chargeStrength;
+  el("gsChargeStrengthVal").textContent = state.graphSettings.chargeStrength;
+  el("gsLinkStrength").value = state.graphSettings.linkStrength;
+  el("gsLinkStrengthVal").textContent = state.graphSettings.linkStrength.toFixed(2);
+  el("gsLinkDistance").value = state.graphSettings.linkDistance;
+  el("gsLinkDistanceVal").textContent = state.graphSettings.linkDistance;
+  el("gsMovement").value = state.graphSettings.movementIntensity;
+  el("gsMovementVal").textContent = state.graphSettings.movementIntensity.toFixed(2);
   renderGraphThemeFilter();
   renderGraphTagFilter();
+  renderGroupsList();
+  renderSolarTagToggles();
   applyGraphCssVars();
 }
+
+// A note is colored by the first enabled group whose keyword matches one of
+// its tags (exact or partial) or appears in its title; otherwise falls back
+// to the theme-folder color.
+function nodeColor(d) {
+  const groups = state.graphSettings.groups || [];
+  const tags = (d.tags || []).map((t) => t.toLowerCase());
+  const title = (d.title || "").toLowerCase();
+  for (const g of groups) {
+    if (!g.enabled) continue;
+    const kw = (g.keyword || "").toLowerCase().trim();
+    if (!kw) continue;
+    if (tags.includes(kw) || tags.some((t) => t.includes(kw)) || title.includes(kw)) return g.color;
+  }
+  return folderColor(d.folder);
+}
+
+// ---------------------------------------------------------------------
+// Groups (color-coded keyword clusters, overlaid on top of the theme color)
+// ---------------------------------------------------------------------
+function renderGroupsList() {
+  const box = el("groupsList");
+  box.innerHTML = "";
+  const groups = state.graphSettings.groups;
+  if (groups.length === 0) {
+    box.innerHTML = '<div class="groups-empty">Nenhum grupo criado.</div>';
+    return;
+  }
+  for (const g of groups) {
+    const row = document.createElement("div");
+    row.className = "group-row";
+
+    const swatch = document.createElement("span");
+    swatch.className = "group-swatch";
+    swatch.style.background = g.color;
+
+    const label = document.createElement("span");
+    label.className = "group-label";
+    label.textContent = `${g.name} (${g.keyword})`;
+    label.title = label.textContent;
+
+    const toggle = document.createElement("button");
+    toggle.className = "btn small" + (g.enabled ? " active" : "");
+    toggle.textContent = g.enabled ? "Ativo" : "Inativo";
+    toggle.title = g.enabled ? "Desativar grupo" : "Ativar grupo";
+    toggle.addEventListener("click", () => {
+      g.enabled = !g.enabled;
+      saveGraphSettings();
+      renderGroupsList();
+      renderActiveGraph();
+    });
+
+    const del = document.createElement("button");
+    del.className = "icon-btn";
+    del.textContent = "✕";
+    del.title = "Remover grupo";
+    del.addEventListener("click", () => {
+      state.graphSettings.groups = state.graphSettings.groups.filter((x) => x.id !== g.id);
+      saveGraphSettings();
+      renderGroupsList();
+      renderActiveGraph();
+    });
+
+    row.appendChild(swatch);
+    row.appendChild(label);
+    row.appendChild(toggle);
+    row.appendChild(del);
+    box.appendChild(row);
+  }
+}
+
+el("groupAdd").addEventListener("click", () => {
+  const name = el("groupName").value.trim();
+  const keyword = el("groupKeyword").value.trim();
+  const color = el("groupColor").value;
+  if (!name || !keyword) return;
+  state.graphSettings.groups.push({
+    id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+    name,
+    keyword,
+    color,
+    enabled: true,
+  });
+  saveGraphSettings();
+  el("groupName").value = "";
+  el("groupKeyword").value = "";
+  renderGroupsList();
+  renderActiveGraph();
+});
+
+// ---------------------------------------------------------------------
+// Per-tag on/off toggles for which suns appear in the Solar System view
+// ---------------------------------------------------------------------
+function renderSolarTagToggles() {
+  const box = el("solarTagToggles");
+  box.innerHTML = "";
+  for (const tag of SOLAR_TAGS) {
+    const pill = document.createElement("span");
+    const disabled = state.graphSettings.solarTagsDisabled.includes(tag);
+    pill.className = "tag-pill" + (disabled ? "" : " active");
+    pill.textContent = tag;
+    pill.title = disabled ? "Desativada — clique para ativar" : "Ativa — clique para desativar";
+    pill.addEventListener("click", () => {
+      const idx = state.graphSettings.solarTagsDisabled.indexOf(tag);
+      if (idx === -1) state.graphSettings.solarTagsDisabled.push(tag);
+      else state.graphSettings.solarTagsDisabled.splice(idx, 1);
+      saveGraphSettings();
+      renderSolarTagToggles();
+      renderActiveGraph();
+    });
+    box.appendChild(pill);
+  }
+}
+
+// ---------------------------------------------------------------------
+// Settings panel tabs
+// ---------------------------------------------------------------------
+function switchSettingsTab(tab) {
+  for (const [id, key] of [
+    ["gsTabForca", "forca"],
+    ["gsTabTela", "tela"],
+    ["gsTabGrupos", "grupos"],
+  ]) {
+    el(id).classList.toggle("active", tab === key);
+  }
+  for (const [id, key] of [
+    ["gsPanelForca", "forca"],
+    ["gsPanelTela", "tela"],
+    ["gsPanelGrupos", "grupos"],
+  ]) {
+    el(id).classList.toggle("hidden", tab !== key);
+  }
+}
+el("gsTabForca").addEventListener("click", () => switchSettingsTab("forca"));
+el("gsTabTela").addEventListener("click", () => switchSettingsTab("tela"));
+el("gsTabGrupos").addEventListener("click", () => switchSettingsTab("grupos"));
 
 function renderGraph() {
   applyGraphCssVars();
@@ -501,7 +755,7 @@ function renderGraph() {
   const nodesMap = new Map();
   for (const [path, note] of Object.entries(state.index)) {
     if (!noteMatchesGraphFilters(note)) continue;
-    nodesMap.set(path, { id: path, title: note.title, folder: note.folder, degree: 0 });
+    nodesMap.set(path, { id: path, title: note.title, folder: note.folder, tags: note.tags, degree: 0 });
   }
   const links = [];
   for (const path of nodesMap.keys()) {
@@ -540,20 +794,26 @@ function renderGraph() {
     d3.zoom().scaleExtent([0.2, 4]).on("zoom", (event) => g.attr("transform", event.transform))
   );
 
-  const AMBIENT_ALPHA = 0.08;
+  const s = state.graphSettings;
+  const ambientAlpha = s.movementIntensity > 0 ? 0.03 + s.movementIntensity * 0.12 : 0;
 
   const simulation = d3
     .forceSimulation(nodes)
     .alphaDecay(0.02)
-    .alphaTarget(AMBIENT_ALPHA)
+    .alphaTarget(ambientAlpha)
     .velocityDecay(0.35)
-    .force("link", d3.forceLink(links).id((d) => d.id).distance(70).strength(0.35))
-    .force("charge", d3.forceManyBody().strength((d) => -80 - radiusOf(d) * 6))
-    .force("center", d3.forceCenter(width / 2, height / 2))
+    .force("link", d3.forceLink(links).id((d) => d.id).distance(s.linkDistance).strength(s.linkStrength))
+    .force("charge", d3.forceManyBody().strength((d) => -s.chargeStrength - radiusOf(d) * 6))
+    .force("center", d3.forceCenter(width / 2, height / 2).strength(s.centerStrength))
     .force("collide", d3.forceCollide((d) => radiusOf(d) + 14))
-    .force("jiggle", forceJiggle(0.5));
+    .force("jiggle", forceJiggle(s.movementIntensity * 1.2));
 
-  const link = g.append("g").selectAll("line").data(links).join("line").attr("class", "graph-link");
+  const link = g
+    .append("g")
+    .selectAll("line")
+    .data(links)
+    .join("line")
+    .attr("class", "graph-link");
 
   const node = g
     .append("g")
@@ -574,23 +834,216 @@ function renderGraph() {
           d.fy = event.y;
         })
         .on("end", (event, d) => {
-          if (!event.active) simulation.alphaTarget(AMBIENT_ALPHA);
+          if (!event.active) simulation.alphaTarget(ambientAlpha);
           d.fx = null;
           d.fy = null;
         })
     )
     .on("click", (event, d) => openNote(d.id));
 
-  node.append("circle").attr("r", radiusOf).attr("fill", (d) => folderColor(d.folder));
+  node.append("circle").attr("r", radiusOf).attr("fill", (d) => nodeColor(d));
 
+  nodes.forEach((n) => { n._r = radiusOf(n); });
   const label = node.append("text").attr("dy", (d) => radiusOf(d) + 8);
   label.each(function (d) {
     const lines = wrapLabel(d.title, 16);
     const text = d3.select(this);
     lines.forEach((line, i) => {
-      text.append("tspan").attr("x", 0).attr("dy", i === 0 ? 0 : "1.05em").text(line);
+      text
+        .append("tspan")
+        .attr("x", 0)
+        .attr("dy", i === 0 ? 0 : "1.05em")
+        .text(line);
     });
   });
+  currentLabelSelection = label;
+  applyLabelVisibility();
+
+  simulation.on("tick", () => {
+    link
+      .attr("x1", (d) => d.source.x)
+      .attr("y1", (d) => d.source.y)
+      .attr("x2", (d) => d.target.x)
+      .attr("y2", (d) => d.target.y);
+    node.attr("transform", (d) => `translate(${d.x},${d.y})`);
+  });
+
+  // Stop the simulation (and its perpetual ambient jiggle) once the user
+  // navigates away from the graph view, so it doesn't run forever in the background.
+  const graphViewEl = document.getElementById("graphView");
+  const stopObserver = new MutationObserver(() => {
+    if (graphViewEl.classList.contains("hidden")) {
+      simulation.stop();
+      stopObserver.disconnect();
+    }
+  });
+  stopObserver.observe(graphViewEl, { attributes: true, attributeFilter: ["class"] });
+}
+
+// ---------------------------------------------------------------------
+// Solar system view — etiquetas viram "sóis" e as notas que carregam
+// aquela etiqueta orbitam ao redor dela como planetas.
+// ---------------------------------------------------------------------
+function sunLabel(tag) {
+  return tag.split("/").pop().replace(/-/g, " ");
+}
+
+function renderSolarSystem() {
+  applyGraphCssVars();
+  const svg = d3.select("#graphSvg");
+  svg.selectAll("*").remove();
+  const wrap = document.getElementById("graphView");
+  const width = wrap.clientWidth || 800;
+  const height = wrap.clientHeight || 600;
+  svg.attr("viewBox", [0, 0, width, height]);
+
+  const scale = state.graphSettings.nodeScale;
+
+  const activeSolarTags = SOLAR_TAGS.filter((t) => !state.graphSettings.solarTagsDisabled.includes(t));
+  const sunNodes = activeSolarTags.map((tag) => ({ id: "sun:" + tag, tag, isSun: true, degree: 0 }));
+  const sunById = new Map(sunNodes.map((s) => [s.id, s]));
+
+  const planetNodes = [];
+  const links = [];
+  for (const [path, note] of Object.entries(state.index)) {
+    if (!noteMatchesGraphFilters(note)) continue;
+    const matchingTags = note.tags.filter((t) => sunById.has("sun:" + t));
+    if (matchingTags.length === 0) continue;
+    planetNodes.push({
+      id: path,
+      title: note.title,
+      folder: note.folder,
+      tags: note.tags,
+      isSun: false,
+      degree: matchingTags.length,
+    });
+    for (const t of matchingTags) {
+      links.push({ source: "sun:" + t, target: path });
+      sunById.get("sun:" + t).degree += 1;
+    }
+  }
+
+  if (planetNodes.length === 0) {
+    svg
+      .append("text")
+      .attr("x", width / 2)
+      .attr("y", height / 2)
+      .attr("text-anchor", "middle")
+      .attr("fill", "var(--text-dim)")
+      .attr("font-size", 13)
+      .text("Nenhuma nota com essas etiquetas (ou os filtros escondem todas).");
+    return;
+  }
+
+  const nodes = [...sunNodes, ...planetNodes];
+  const maxSunDegree = Math.max(1, ...sunNodes.map((n) => n.degree));
+  const sunRadiusScale = d3.scaleSqrt().domain([0, maxSunDegree]).range([9 * scale, 26 * scale]).clamp(true);
+  const maxPlanetDegree = Math.max(1, ...planetNodes.map((n) => n.degree));
+  const planetRadiusScale = d3.scaleSqrt().domain([1, maxPlanetDegree]).range([3.5 * scale, 9 * scale]).clamp(true);
+  const radiusOf = (d) => (d.isSun ? sunRadiusScale(d.degree) : planetRadiusScale(d.degree));
+
+  const g = svg.append("g");
+  svg.call(
+    d3.zoom().scaleExtent([0.2, 4]).on("zoom", (event) => g.attr("transform", event.transform))
+  );
+
+  const s = state.graphSettings;
+  const ambientAlpha = s.movementIntensity > 0 ? 0.03 + s.movementIntensity * 0.12 : 0;
+  const simulation = d3
+    .forceSimulation(nodes)
+    .alphaDecay(0.02)
+    .alphaTarget(ambientAlpha)
+    .velocityDecay(0.35)
+    .force(
+      "link",
+      d3
+        .forceLink(links)
+        .id((d) => d.id)
+        .distance((d) => radiusOf(d.source) + radiusOf(d.target) + s.linkDistance)
+        .strength(s.linkStrength)
+    )
+    .force("charge", d3.forceManyBody().strength((d) => (d.isSun ? -s.chargeStrength * 4 : -s.chargeStrength * 0.5)))
+    .force("center", d3.forceCenter(width / 2, height / 2).strength(s.centerStrength))
+    .force("collide", d3.forceCollide((d) => radiusOf(d) + (d.isSun ? 20 : 10)))
+    .force("jiggle", forceJiggle(s.movementIntensity * 1.2));
+
+  const link = g.append("g").selectAll("line").data(links).join("line").attr("class", "graph-link orbit");
+
+  // Clicking a sun highlights it and the planets orbiting it; clicking it
+  // again (or another sun) resets/moves the focus.
+  let focusedSun = null;
+  function applyFocus() {
+    if (!focusedSun) {
+      node.classed("dimmed", false);
+      link.classed("dimmed", false);
+      return;
+    }
+    const connected = new Set([focusedSun]);
+    for (const l of links) {
+      const src = typeof l.source === "object" ? l.source.id : l.source;
+      const tgt = typeof l.target === "object" ? l.target.id : l.target;
+      if (src === focusedSun) connected.add(tgt);
+      if (tgt === focusedSun) connected.add(src);
+    }
+    node.classed("dimmed", (d) => !connected.has(d.id));
+    link.classed("dimmed", (l) => {
+      const src = typeof l.source === "object" ? l.source.id : l.source;
+      const tgt = typeof l.target === "object" ? l.target.id : l.target;
+      return src !== focusedSun && tgt !== focusedSun;
+    });
+  }
+
+  const node = g
+    .append("g")
+    .selectAll("g")
+    .data(nodes)
+    .join("g")
+    .attr("class", (d) => "graph-node" + (d.isSun ? " sun" : ""))
+    .call(
+      d3
+        .drag()
+        .on("start", (event, d) => {
+          if (!event.active) simulation.alphaTarget(0.3).restart();
+          d.fx = d.x;
+          d.fy = d.y;
+        })
+        .on("drag", (event, d) => {
+          d.fx = event.x;
+          d.fy = event.y;
+        })
+        .on("end", (event, d) => {
+          if (!event.active) simulation.alphaTarget(ambientAlpha);
+          d.fx = null;
+          d.fy = null;
+        })
+    )
+    .on("click", (event, d) => {
+      if (d.isSun) {
+        focusedSun = focusedSun === d.id ? null : d.id;
+        applyFocus();
+      } else {
+        openNote(d.id);
+      }
+    });
+
+  node.append("circle").attr("r", radiusOf).attr("fill", (d) => (d.isSun ? null : nodeColor(d)));
+  node.append("title").text((d) => (d.isSun ? `${d.tag} (${d.degree} nota${d.degree === 1 ? "" : "s"})` : d.title));
+
+  nodes.forEach((n) => { n._r = radiusOf(n); });
+  const label = node.append("text").attr("dy", (d) => radiusOf(d) + 8);
+  label.each(function (d) {
+    const text = d3.select(this);
+    const lines = d.isSun ? wrapLabel(sunLabel(d.tag), 13) : wrapLabel(d.title, 16);
+    lines.forEach((line, i) => {
+      text
+        .append("tspan")
+        .attr("x", 0)
+        .attr("dy", i === 0 ? 0 : "1.05em")
+        .text(line);
+    });
+  });
+  currentLabelSelection = label;
+  applyLabelVisibility();
 
   simulation.on("tick", () => {
     link
@@ -611,13 +1064,33 @@ function renderGraph() {
   stopObserver.observe(graphViewEl, { attributes: true, attributeFilter: ["class"] });
 }
 
-el("graphBtn").addEventListener("click", () => {
+function renderActiveGraph() {
+  if (state.graphSettings.solarMode) renderSolarSystem();
+  else renderGraph();
+}
+
+function updateSolarToggleUI() {
+  el("solarToggleBtn").classList.toggle("active", state.graphSettings.solarMode);
+}
+
+function showGraphView() {
   el("emptyState").classList.add("hidden");
   el("editorView").classList.add("hidden");
   el("graphView").classList.remove("hidden");
   el("graphSettingsBtn").classList.remove("hidden");
+  el("solarToggleBtn").classList.remove("hidden");
   populateGraphSettingsUI();
-  renderGraph();
+  updateSolarToggleUI();
+  renderActiveGraph();
+}
+
+el("graphBtn").addEventListener("click", showGraphView);
+
+el("solarToggleBtn").addEventListener("click", () => {
+  state.graphSettings.solarMode = !state.graphSettings.solarMode;
+  saveGraphSettings();
+  updateSolarToggleUI();
+  renderActiveGraph();
 });
 
 el("graphSettingsBtn").addEventListener("click", () => {
@@ -638,26 +1111,67 @@ el("gsLinkIntensity").addEventListener("input", (e) => {
   saveGraphSettings();
 });
 
-let nodeSizeDebounce;
 el("gsNodeSize").addEventListener("input", (e) => {
   state.graphSettings.nodeScale = parseFloat(e.target.value);
   el("gsNodeSizeVal").textContent = state.graphSettings.nodeScale.toFixed(1) + "×";
   saveGraphSettings();
-  clearTimeout(nodeSizeDebounce);
-  nodeSizeDebounce = setTimeout(renderGraph, 120);
+  debounceRenderActiveGraph();
+});
+
+el("gsLabelThreshold").addEventListener("input", (e) => {
+  state.graphSettings.labelVisibilityThreshold = parseFloat(e.target.value);
+  el("gsLabelThresholdVal").textContent = state.graphSettings.labelVisibilityThreshold;
+  saveGraphSettings();
+  applyLabelVisibility();
+});
+
+el("gsCenterStrength").addEventListener("input", (e) => {
+  state.graphSettings.centerStrength = parseFloat(e.target.value);
+  el("gsCenterStrengthVal").textContent = state.graphSettings.centerStrength.toFixed(1);
+  saveGraphSettings();
+  debounceRenderActiveGraph();
+});
+
+el("gsChargeStrength").addEventListener("input", (e) => {
+  state.graphSettings.chargeStrength = parseFloat(e.target.value);
+  el("gsChargeStrengthVal").textContent = state.graphSettings.chargeStrength;
+  saveGraphSettings();
+  debounceRenderActiveGraph();
+});
+
+el("gsLinkStrength").addEventListener("input", (e) => {
+  state.graphSettings.linkStrength = parseFloat(e.target.value);
+  el("gsLinkStrengthVal").textContent = state.graphSettings.linkStrength.toFixed(2);
+  saveGraphSettings();
+  debounceRenderActiveGraph();
+});
+
+el("gsLinkDistance").addEventListener("input", (e) => {
+  state.graphSettings.linkDistance = parseFloat(e.target.value);
+  el("gsLinkDistanceVal").textContent = state.graphSettings.linkDistance;
+  saveGraphSettings();
+  debounceRenderActiveGraph();
+});
+
+el("gsMovement").addEventListener("input", (e) => {
+  state.graphSettings.movementIntensity = parseFloat(e.target.value);
+  el("gsMovementVal").textContent = state.graphSettings.movementIntensity.toFixed(2);
+  saveGraphSettings();
+  debounceRenderActiveGraph();
 });
 
 el("gsThemeFilter").addEventListener("change", (e) => {
   state.graphSettings.theme = e.target.value;
   saveGraphSettings();
-  renderGraph();
+  renderActiveGraph();
 });
 
 el("gsReset").addEventListener("click", () => {
-  state.graphSettings = { ...GRAPH_SETTINGS_DEFAULTS, tags: [] };
+  state.graphSettings = { ...GRAPH_SETTINGS_DEFAULTS, tags: [], groups: [], solarTagsDisabled: [] };
   saveGraphSettings();
   populateGraphSettingsUI();
-  renderGraph();
+  updateSolarToggleUI();
+  renderActiveGraph();
 });
 
 // ---------------------------------------------------------------------
