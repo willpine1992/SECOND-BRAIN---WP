@@ -373,40 +373,34 @@ function renderTagList() {
 }
 
 // ---------------------------------------------------------------------
-// Search (filters tree by re-rendering as flat filtered list when active)
+// Search — results highlight matching nodes in the graph (others dim to
+// 25% opacity) and list as links in the right panel (searchResultsBox),
+// next to Frontmatter/Links de saída/Backlinks.
 // ---------------------------------------------------------------------
+let searchResultPaths = null; // Set of paths, or null when no search is active
+
 async function runSearch() {
   const q = el("searchInput").value.trim();
+  const section = el("searchResultsSection");
+  const box = el("searchResultsBox");
   if (!q && !state.activeTag) {
-    refreshTreeView();
+    searchResultPaths = null;
+    section.classList.add("hidden");
+    applySearchDim();
     return;
   }
-  // Os resultados são renderizados dentro do painel Notas/Tags — como ele
-  // agora é um popup fechado por padrão, sem isso a busca "não faz nada"
-  // visivelmente mesmo funcionando.
-  el("sidebar").classList.remove("collapsed");
   const data = await searchNotes(q, state.activeTag);
-  const container = el("tree");
-  container.innerHTML = "";
-  const ul = document.createElement("ul");
+  searchResultPaths = new Set(data.results.map((r) => r.path));
+  section.classList.remove("hidden");
+  box.innerHTML = "";
+  if (data.results.length === 0) box.textContent = "Nenhum resultado";
   for (const r of data.results) {
-    const li = document.createElement("li");
-    const row = document.createElement("div");
-    row.className = "node file" + (r.path === state.currentPath ? " active" : "");
-    row.textContent = "📄 " + r.title;
-    row.title = r.path;
-    row.addEventListener("click", () => openNote(r.path));
-    li.appendChild(row);
-    ul.appendChild(li);
+    const a = document.createElement("a");
+    a.textContent = r.title;
+    a.addEventListener("click", () => openNote(r.path));
+    box.appendChild(a);
   }
-  if (data.results.length === 0) {
-    const li = document.createElement("li");
-    li.className = "node";
-    li.style.color = "var(--text-dim)";
-    li.textContent = "Nenhum resultado";
-    ul.appendChild(li);
-  }
-  container.appendChild(ul);
+  applySearchDim();
 }
 
 // ---------------------------------------------------------------------
@@ -797,6 +791,25 @@ function applyLabelVisibility() {
   currentLabelSelection.style("display", (d) => (d._r >= threshold ? null : "none"));
 }
 
+// Same pattern as currentLabelSelection: kept live so a search can dim
+// non-matching nodes/links without forcing a full re-render.
+let currentNodeSelection = null;
+let currentLinkSelection = null;
+function applySearchDim() {
+  if (!currentNodeSelection) return;
+  if (!searchResultPaths) {
+    currentNodeSelection.classed("dimmed", false);
+    currentLinkSelection.classed("dimmed", false);
+    return;
+  }
+  currentNodeSelection.classed("dimmed", (d) => !searchResultPaths.has(d.id));
+  currentLinkSelection.classed("dimmed", (l) => {
+    const src = typeof l.source === "object" ? l.source.id : l.source;
+    const tgt = typeof l.target === "object" ? l.target.id : l.target;
+    return !searchResultPaths.has(src) && !searchResultPaths.has(tgt);
+  });
+}
+
 // Debounced re-render for settings that require restarting the force
 // simulation (as opposed to font size / link opacity / label threshold,
 // which apply live without rebuilding the layout).
@@ -1012,26 +1025,26 @@ el("groupAdd").addEventListener("click", () => {
 // ---------------------------------------------------------------------
 function switchSettingsTab(tab) {
   for (const [id, key] of [
-    ["gsTabForca", "forca"],
-    ["gsTabTela", "tela"],
     ["gsTabFiltros", "filtros"],
     ["gsTabGrupos", "grupos"],
+    ["gsTabForca", "forca"],
+    ["gsTabTela", "tela"],
   ]) {
     el(id).classList.toggle("active", tab === key);
   }
   for (const [id, key] of [
-    ["gsPanelForca", "forca"],
-    ["gsPanelTela", "tela"],
     ["gsPanelFiltros", "filtros"],
     ["gsPanelGrupos", "grupos"],
+    ["gsPanelForca", "forca"],
+    ["gsPanelTela", "tela"],
   ]) {
     el(id).classList.toggle("hidden", tab !== key);
   }
 }
-el("gsTabForca").addEventListener("click", () => switchSettingsTab("forca"));
-el("gsTabTela").addEventListener("click", () => switchSettingsTab("tela"));
 el("gsTabFiltros").addEventListener("click", () => switchSettingsTab("filtros"));
 el("gsTabGrupos").addEventListener("click", () => switchSettingsTab("grupos"));
+el("gsTabForca").addEventListener("click", () => switchSettingsTab("forca"));
+el("gsTabTela").addEventListener("click", () => switchSettingsTab("tela"));
 
 // Splits a title into up to 3 short lines (word-wrapped), ellipsizing
 // whatever doesn't fit, so labels stay readable at small node sizes.
@@ -1087,7 +1100,10 @@ function renderGraph() {
   applyGraphCssVars();
   const svg = d3.select("#graphSvg");
   svg.selectAll("*").remove();
-  const wrap = document.getElementById("graphView");
+  // Mede o próprio <svg>, não o #graphView — o painel de configurações é
+  // uma coluna fixa dentro de #graphView, então o wrapper inteiro não
+  // reflete a largura real disponível pro grafo.
+  const wrap = document.getElementById("graphSvg");
   const width = wrap.clientWidth || 800;
   const height = wrap.clientHeight || 600;
   svg.attr("viewBox", [0, 0, width, height]);
@@ -1243,8 +1259,9 @@ function renderGraph() {
   // to; everything else fades to 50% opacity while the mouse stays over it.
   function applyFocus(focusedId) {
     if (!focusedId) {
-      node.classed("dimmed", false);
-      link.classed("dimmed", false);
+      // Sem foco de hover, volta pro estado ditado pela busca (ou tudo
+      // aceso, se não houver busca ativa) em vez de sempre limpar.
+      applySearchDim();
       return;
     }
     const connected = new Set([focusedId]);
@@ -1317,6 +1334,9 @@ function renderGraph() {
   });
   currentLabelSelection = label;
   applyLabelVisibility();
+  currentNodeSelection = node;
+  currentLinkSelection = link;
+  applySearchDim();
 
   simulation.on("tick", () => {
     link
@@ -1378,6 +1398,9 @@ el("gsSolarModeToggle").addEventListener("click", () => {
 
 el("graphSettingsBtn").addEventListener("click", () => {
   el("graphSettingsPanel").classList.toggle("hidden");
+  // O painel ocupa espaço em vez de flutuar por cima do svg, então o grafo
+  // precisa recalcular sua largura disponível e recentralizar.
+  requestAnimationFrame(() => renderActiveGraph());
 });
 
 el("gsFontSize").addEventListener("input", (e) => {

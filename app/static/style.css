@@ -72,6 +72,17 @@ body {
   flex-shrink: 0;
 }
 .brand { font-weight: 600; letter-spacing: 0.2px; white-space: nowrap; }
+#brandBar {
+  background: var(--bg-sidebar);
+  color: var(--text-dim);
+  font-size: 11px;
+  padding: 4px 14px;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+#brandBar a { color: var(--text-dim); text-decoration: underline; }
+#brandBar a:hover { color: var(--accent); }
 .searchbox { flex: 1; max-width: 480px; display: flex; gap: 6px; }
 .searchbox input {
   flex: 1;
@@ -113,7 +124,7 @@ a.btn { display: inline-block; text-decoration: none; }
   padding: 4px 6px;
 }
 
-#body { flex: 1; display: flex; min-height: 0; position: relative; }
+#body { flex: 1; display: flex; min-height: 0; }
 
 #rightPanel {
   width: 260px;
@@ -125,22 +136,15 @@ a.btn { display: inline-block; text-decoration: none; }
   border-left: 1px solid var(--border);
 }
 
-/* Notas/Tags: popup flutuante (aberto pelo ícone de arquivo), não uma
-   coluna fixa. */
+/* Notas/Tags: coluna fixa (não popup flutuante), aberta/fechada pelo ícone
+   de arquivo. */
 #sidebar {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  width: 270px;
-  max-height: calc(100% - 28px);
+  width: 260px;
+  flex-shrink: 0;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
   overflow-y: auto;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 12px 14px 14px;
-  box-shadow: var(--shadow);
-  font-size: 13px;
-  z-index: 15;
+  padding: 10px;
 }
 #sidebar.collapsed { display: none; }
 
@@ -272,8 +276,8 @@ a.btn { display: inline-block; text-decoration: none; }
 .meta-box a:hover { text-decoration: underline; }
 .meta-box .broken-link { color: var(--danger); }
 
-#graphView { flex: 1; min-height: 0; position: relative; }
-#graphSvg { width: 100%; height: 100%; display: block; background: var(--bg); }
+#graphView { flex: 1; min-height: 0; position: relative; display: flex; }
+#graphSvg { flex: 1; min-width: 0; height: 100%; display: block; background: var(--bg); }
 .graph-node circle { stroke: var(--bg); stroke-width: 1.5px; cursor: pointer; }
 .graph-node text { font-size: var(--graph-font-size, 6px); fill: var(--text-dim); pointer-events: none; text-anchor: middle; }
 .graph-link { stroke: var(--border); stroke-width: var(--graph-link-width, 1px); stroke-opacity: var(--graph-link-opacity, 0.45); }
@@ -290,20 +294,16 @@ a.btn { display: inline-block; text-decoration: none; }
   cursor: pointer;
 }
 
+/* Fixa do lado esquerdo do grafo (não é mais popup flutuante) — o painel
+   vem antes do <svg> no HTML para o flex row colocá-lo à esquerda. */
 .graph-settings {
-  position: absolute;
-  top: 14px;
-  right: 14px;
   width: 270px;
-  max-height: calc(100% - 28px);
+  flex-shrink: 0;
   overflow-y: auto;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border);
-  border-radius: 10px;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
   padding: 12px 14px 14px;
-  box-shadow: var(--shadow);
   font-size: 12px;
-  z-index: 10;
 }
 .graph-settings-title {
   font-size: 11px;
@@ -390,8 +390,6 @@ a.btn { display: inline-block; text-decoration: none; }
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
-  max-height: 130px;
-  overflow-y: auto;
   padding-top: 2px;
 }
 .gs-tag-filter .tag-pill { font-size: 10px; padding: 2px 7px; }
@@ -428,8 +426,11 @@ a.btn { display: inline-block; text-decoration: none; }
 .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
 
 @media (max-width: 860px) {
-  #rightPanel { position: absolute; top: 0; bottom: 0; right: 0; z-index: 20; box-shadow: var(--shadow); display: none; }
-  #sidebar, .graph-settings { top: 0; bottom: 0; right: 0; max-height: none; border-radius: 0; }
+  #sidebar, #rightPanel { position: absolute; top: 0; bottom: 0; z-index: 20; box-shadow: var(--shadow); }
+  #rightPanel { right: 0; display: none; }
+  #sidebar { left: 0; }
+  #sidebar.collapsed { display: none; }
+  .graph-settings { position: absolute; top: 0; bottom: 0; left: 0; z-index: 12; box-shadow: var(--shadow); }
   .searchbox { max-width: 140px; }
   .brand { display: none; }
 }

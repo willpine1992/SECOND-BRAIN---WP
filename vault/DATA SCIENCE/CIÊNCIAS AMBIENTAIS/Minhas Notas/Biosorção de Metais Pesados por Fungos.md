@@ -1,5 +1,5 @@
 ---
-tags: [índice, patricia-melchina]
+tags: [patricia-melchina]
 data: 2026-09-16
 ---
 

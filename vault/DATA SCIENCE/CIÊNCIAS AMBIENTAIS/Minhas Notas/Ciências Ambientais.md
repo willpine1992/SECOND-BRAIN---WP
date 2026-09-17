@@ -1,5 +1,5 @@
 ---
-tags: [indice, sergio-duvoisin-junior]
+tags: [sergio-duvoisin-junior]
 data: 2026-09-16
 ---
 

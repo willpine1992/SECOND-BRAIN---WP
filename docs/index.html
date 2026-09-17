@@ -18,15 +18,15 @@
   </div>
 
   <header id="topbar">
-    <button id="toggleSidebar" class="icon-btn" title="Notas e Tags">📁</button>
-    <div class="brand">🧠 Second Brain</div>
+    <button id="graphSettingsBtn" class="icon-btn hidden" title="Configurações do grafo">☰</button>
+    <div class="brand">🧠 My Second Brain</div>
     <div class="searchbox">
       <input id="searchInput" type="text" placeholder="Buscar notas, tags, conteúdo..." />
       <button id="searchBtn" class="icon-btn" title="Buscar">🔍</button>
     </div>
     <div class="topbar-actions">
       <button id="graphBtn" class="btn">Grafo</button>
-      <button id="graphSettingsBtn" class="icon-btn hidden" title="Configurações do grafo">⚙</button>
+      <button id="toggleSidebar" class="icon-btn" title="Notas e Tags">📁</button>
       <button id="themeBtn" class="icon-btn" title="Alternar tema">◐</button>
     </div>
   </header>
@@ -63,18 +63,42 @@
       </div>
 
       <div id="graphView" class="hidden">
-        <svg id="graphSvg"></svg>
         <div id="graphSettingsPanel" class="graph-settings hidden">
           <div class="graph-settings-title">Configurações do grafo</div>
 
           <div class="gs-tabs">
-            <button id="gsTabForca" class="gs-tab active" data-tab="forca">Força</button>
-            <button id="gsTabTela" class="gs-tab" data-tab="tela">Tela</button>
-            <button id="gsTabFiltros" class="gs-tab" data-tab="filtros">Filtros</button>
+            <button id="gsTabFiltros" class="gs-tab active" data-tab="filtros">Filtros</button>
             <button id="gsTabGrupos" class="gs-tab" data-tab="grupos">Grupos</button>
+            <button id="gsTabForca" class="gs-tab" data-tab="forca">Força</button>
+            <button id="gsTabTela" class="gs-tab" data-tab="tela">Tela</button>
           </div>
 
-          <div id="gsPanelForca" class="gs-panel">
+          <div id="gsPanelFiltros" class="gs-panel">
+            <label class="gs-label">Tema</label>
+            <select id="gsThemeFilter">
+              <option value="">Todos os temas</option>
+            </select>
+
+            <label class="gs-label">Notas de "Minhas Notas" <button id="gsMinhasNotasToggle" class="btn small"></button></label>
+
+            <label class="gs-label">Etiquetas <button id="gsSolarModeToggle" class="btn small"></button></label>
+            <div id="gsTagFilter" class="gs-tag-filter"></div>
+          </div>
+
+          <div id="gsPanelGrupos" class="gs-panel hidden">
+            <div class="graph-settings-subtitle">Grupos por palavra-chave</div>
+            <div id="groupsList" class="groups-list"></div>
+            <div class="group-form">
+              <input id="groupName" type="text" placeholder="Nome do grupo" />
+              <input id="groupKeyword" type="text" placeholder="Palavra-chave(s), separadas por vírgula" />
+              <div class="group-form-row">
+                <input id="groupColor" type="color" value="#4a6fa5" />
+                <button id="groupAdd" class="btn">+ Adicionar grupo</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="gsPanelForca" class="gs-panel hidden">
             <label class="gs-label">Força centrípeta <span id="gsCenterStrengthVal"></span></label>
             <input id="gsCenterStrength" type="range" min="0" max="2" step="0.1" />
 
@@ -105,37 +129,17 @@
             <input id="gsLinkIntensity" type="range" min="0.05" max="1" step="0.05" />
           </div>
 
-          <div id="gsPanelFiltros" class="gs-panel hidden">
-            <label class="gs-label">Tema</label>
-            <select id="gsThemeFilter">
-              <option value="">Todos os temas</option>
-            </select>
-
-            <label class="gs-label">Etiquetas <button id="gsSolarModeToggle" class="btn small"></button></label>
-            <div id="gsTagFilter" class="gs-tag-filter"></div>
-
-            <label class="gs-label">Notas de "Minhas Notas" <button id="gsMinhasNotasToggle" class="btn small"></button></label>
-          </div>
-
-          <div id="gsPanelGrupos" class="gs-panel hidden">
-            <div class="graph-settings-subtitle">Grupos por palavra-chave</div>
-            <div id="groupsList" class="groups-list"></div>
-            <div class="group-form">
-              <input id="groupName" type="text" placeholder="Nome do grupo" />
-              <input id="groupKeyword" type="text" placeholder="Palavra-chave(s), separadas por vírgula" />
-              <div class="group-form-row">
-                <input id="groupColor" type="color" value="#4a6fa5" />
-                <button id="groupAdd" class="btn">+ Adicionar grupo</button>
-              </div>
-            </div>
-          </div>
-
           <button id="gsReset" class="btn" style="margin-top:12px;">Restaurar padrão</button>
         </div>
+        <svg id="graphSvg"></svg>
       </div>
     </main>
 
     <aside id="rightPanel">
+      <div id="searchResultsSection" class="sidebar-section hidden">
+        <div class="sidebar-title">Resultados da busca</div>
+        <div id="searchResultsBox" class="meta-box">—</div>
+      </div>
       <div class="sidebar-section">
         <div class="sidebar-title">Frontmatter</div>
         <div id="frontmatterBox" class="meta-box">—</div>
@@ -153,7 +157,7 @@
 
   <div id="brandBar">
     Powered by William Pinheiro ·
-    <a href="http://lattes.cnpq.br/9111919283952655" target="_blank" rel="noopener noreferrer">Lattes</a> ·
+    <a href="https://lattes.cnpq.br/9111919283952655" target="_blank" rel="noopener noreferrer">Lattes</a> ·
     <a href="https://orcid.org/0000-0003-0758-8292" target="_blank" rel="noopener noreferrer">ORCID</a>
   </div>
 </div>
